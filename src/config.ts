@@ -1,7 +1,7 @@
 // ============================================
 // 基础信息配置
 // ============================================
-export const BLOG_NAME = "ATao";
+export const BLOG_NAME = "王苏洋Blog";
 export const SITE_DESCRIPTION = "做自己喜欢的事";
 
 // ============================================
@@ -35,11 +35,11 @@ export const NAVBAR = {
   // Logo 文字（如果为空则只显示图标）
   logoText: "Blog",
   // Logo 图标文字（单个字符）
-  logoIcon: "T",
+  logoIcon: "W",
   // 是否显示搜索功能
   showSearch: true,
   // 是否显示主题切换(暂时关闭)
-  showThemeToggle: false,
+  showThemeToggle: true,
   // 导航栏背景透明度（0-1）
   backgroundOpacity: 0.8,
   // 是否启用毛玻璃效果
@@ -69,7 +69,7 @@ export const AUTHOR_PROFILE = {
     {
       name: "gitHub",
       icon: "mdi:github",
-      url: "https://github.com/ataoyan"
+      url: "https://github.com/suyangb"
     },
     {
       name: "bilibili",
@@ -145,7 +145,7 @@ export const LICENSE_CONFIG = {
 // ============================================
 export const ICP_INFO = {
   // 备案号
-  icp: "浙ICP备2024096834号-3",
+  icp: "皖ICP备2024049551号-2",
 };
 
 // ============================================
@@ -177,11 +177,11 @@ export const TWIKOO = {
 // ============================================
 export const FRIEND_LINK_CONTACT = {
   // 申请友链的联系邮箱
-  email: 'qiatao0305@163.com',
+  email: '1493367306@qq.com',
   // 本站名称
-  name: 'ATao-Blog',
+  name: '王苏洋Blog',
   // 本站地址
-  url: 'https://blog.atao.cyou/',
+  url: 'https://wsyblog.cn',
   // 本站描述
   description: '做自己喜欢的事',
   // 本站头像
