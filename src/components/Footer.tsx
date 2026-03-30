@@ -16,12 +16,11 @@ export default function Footer() {
           className="hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
         >
           {ICP_INFO.icp}
-          <!-- 公安网安备案（官方标准格式） -->
+          
   <a href="https://beian.mps.gov.cn/#/query/webSearch?code=34162202003345" target="_blank" rel="noopener noreferrer" style="margin:0 8px; color:#666; text-decoration:none;">
     <img src="https://beian.mps.gov.cn/img/icon.png" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;">
     皖公网安备34162202003345号
   </a>
-</div>
         </a>
         <span className="text-slate-300 dark:text-slate-600">·</span>
         <a
