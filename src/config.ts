@@ -33,9 +33,9 @@ export const NAVBAR = {
     { label: '关于', href: '/about' },
   ],
   // Logo 文字（如果为空则只显示图标）
-  logoText: "Blog",
+  logoText: "王苏洋Blog",
   // Logo 图标文字（单个字符）
-  logoIcon: "WSY",
+  logoIcon: "W",
   // 是否显示搜索功能
   showSearch: true,
   // 是否显示主题切换(暂时关闭)
