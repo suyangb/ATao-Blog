@@ -35,7 +35,7 @@ export const NAVBAR = {
   // Logo 文字（如果为空则只显示图标）
   logoText: "Blog",
   // Logo 图标文字（单个字符）
-  logoIcon: "W",
+  logoIcon: "WSY",
   // 是否显示搜索功能
   showSearch: true,
   // 是否显示主题切换(暂时关闭)
@@ -58,7 +58,7 @@ export const POST_CARD = {
 // 作者信息配置
 // ============================================
 export const AUTHOR_PROFILE = {
-  name: "ATao",
+  name: "王苏洋",
   role: "自动化开发工程师",
   avatar: "https://cdn.atao.cyou/Web/Avatar.png",
   // 博客内容描述（支持 HTML 标签设置颜色）
@@ -169,7 +169,7 @@ export const FEATURES = {
 // ============================================
 export const TWIKOO = {
   // Twikoo 环境 ID (自建时填写地址)
-  envId: 'https://twikoo.taonotespace.com',
+  envId: 'https://pinglun.wsyblog.cn',
 };
 
 // ============================================
