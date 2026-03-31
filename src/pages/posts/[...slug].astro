@@ -60,7 +60,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
       setSearchQuery={() => {}}
     />
 
-    <main class="flex-1 flex flex-col relative w-full max-w-5xl ml-6 lg:ml-12 px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 z-10 overflow-x-hidden">
+    <main class="flex-1 flex flex-col relative w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 z-10 overflow-x-hidden">
       <div class="animate-in fade-in slide-in-from-bottom-8 duration-500">
         <a 
           href="/"
@@ -125,7 +125,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 
           <MarkdownRenderer client:load content={post.body} />
 
-          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
+          <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 w-full">
             <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
           </div>
           
