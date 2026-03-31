@@ -60,7 +60,7 @@ export const POST_CARD = {
 export const AUTHOR_PROFILE = {
   name: "王苏洋",
   role: "自动化开发工程师",
-  avatar: "https://cdn.atao.cyou/Web/Avatar.png",
+  avatar: "https://wsyblog.cn/IMG_8745.jpeg",
   // 博客内容描述（支持 HTML 标签设置颜色）
   // 使用与金色主题协调的暖色调
   blogContent: "主要分享<span class=\"text-[#8c6b3f] dark:text-[#d3bc8e] font-semibold\">经验分享</span>、<span class=\"text-[#a38753] dark:text-[#d3bc8e] font-semibold\">代码</span>和<span class=\"text-[#be9f65] dark:text-[#d3bc8e] font-semibold\">Minecraft</span>相关的内容。涵盖AI、Docker、WPF、Python、Android等技术领域，以及一些实用的工具和技巧。",
@@ -91,7 +91,7 @@ export const AUTHOR_PROFILE = {
     {
       name: "email",
       icon: "carbon:email",
-      url: "mailto:qiatao0305@163.com"
+      url: "mailto:1493367306@qq.com"
     },
   ],
   // 技能标签分类
@@ -121,7 +121,7 @@ export const AUTHOR_PROFILE = {
   // MBTI
   mbti: "INTJ",
   // 出生年份（用于计算年龄和Lv等级）
-  birthYear: 1999
+  birthYear: 2002
 };
 
 // ============================================
@@ -185,5 +185,5 @@ export const FRIEND_LINK_CONTACT = {
   // 本站描述
   description: '做自己喜欢的事',
   // 本站头像
-  avatar: 'https://cdn.atao.cyou/Web/Avatar.png',
+  avatar: 'https://wsyblog.cn/IMG_8745.jpeg',
 };
