@@ -125,7 +125,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 
           <MarkdownRenderer client:load content={post.body} />
 
-          <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 w-full">
+          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
             <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
           </div>
           
