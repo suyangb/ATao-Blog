@@ -2,7 +2,7 @@
 // 基础信息配置
 // ============================================
 export const BLOG_NAME = "王苏洋Blog";
-export const SITE_DESCRIPTION = "做自己喜欢的事";
+export const SITE_DESCRIPTION = "一个爱折腾的普通人";
 
 // ============================================
 // 首页配置
@@ -74,13 +74,13 @@ export const AUTHOR_PROFILE = {
     {
       name: "bilibili",
       icon: "ri:bilibili-fill" ,
-      url: "https://space.bilibili.com/291198772"
+      url: "https://space.bilibili.com/UID:3546387501287798"
     },
     {
       name: "tiktok",
       icon: "lineicons:tiktok",
       url: "", // 抖音不需要URL，使用 douyinId
-      douyinId: "71134083952" // 抖音号，点击后复制
+      douyinId: "131694166" // 抖音号，点击后复制
     },
     {
       name: "wechat",
@@ -137,7 +137,7 @@ export const LICENSE_CONFIG = {
   // 许可协议文本
   text: "本博客所有文章除特别声明外，均采用 CC BY-NC-SA 4.0 许可协议, 转载请注明出处。",
   // 是否显示原创徽章
-  showOriginalBadge: true,
+  showOriginalBadge: false,
 };
 
 // ============================================
@@ -183,7 +183,7 @@ export const FRIEND_LINK_CONTACT = {
   // 本站地址
   url: 'https://wsyblog.cn',
   // 本站描述
-  description: '做自己喜欢的事',
+  description: '一个爱折腾的普通人',
   // 本站头像
   avatar: 'https://wsyblog.cn/IMG_8745.jpeg',
 };
