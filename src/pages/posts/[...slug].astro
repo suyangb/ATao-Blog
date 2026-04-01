@@ -58,13 +58,11 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
       setSearchQuery={() => {}}
     />
 
-    {/* 关键：去掉 max-width 和居中，改为全屏宽度 */}
-    <main class="flex-1 flex flex-col relative w-full mx-0 px-0 pt-20 sm:pt-24 z-10 overflow-x-hidden">
+    <main class="flex-1 flex flex-col relative w-full max-w-[95%] mx-auto px-2 sm:px-4 pt-20 sm:pt-24 z-10 overflow-x-hidden">
       <div class="animate-in fade-in slide-in-from-bottom-8 duration-500 w-full">
-        
         <a 
           href="/"
-          class="group mb-8 flex items-center gap-2 text-slate-500 hover:text-docs-accent dark:text-slate-400 dark:hover:text-dark-accent transition-colors px-4 sm:px-6 lg:px-8"
+          class="group mb-8 flex items-center gap-2 text-slate-500 hover:text-docs-accent dark:text-slate-400 dark:hover:text-dark-accent transition-colors"
         >
           <div class="p-2 rounded-full bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/5 group-hover:-translate-x-1 transition-transform">
             <ArrowLeft size={18} />
@@ -72,8 +70,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
           <span class="text-sm font-medium">返回列表</span>
         </a>
 
-        {/* 文章卡片全屏、不居中、占满两侧 */}
-        <article class="w-full max-w-none bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm border border-slate-100/50 dark:border-white/5 p-8 sm:p-12" style="contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
+        <article class="w-full max-w-none bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-6 sm:p-8" style="contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
           <header class="relative mb-12 py-10 sm:py-14 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-docs-accent/5 to-transparent opacity-0 dark:opacity-20 pointer-events-none rounded-full blur-3xl"></div>
             
