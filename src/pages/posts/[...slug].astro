@@ -46,7 +46,7 @@ const nextPostId = nextPost ? generateShortId(nextPost.id) : null;
 const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 ---
 
-<BaseLayout title={`${post.data.title} | ${post.data.title}`}>
+<BaseLayout title={`${post.data.title} | Astro Blog`}>
   <div class="min-h-screen relative flex flex-col">
     {FEATURES.readingProgress && <ProgressBar client:load />}
     {FEATURES.tableOfContents && <TableOfContents client:load />}
@@ -72,7 +72,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
           <span class="text-sm font-medium">返回列表</span>
         </a>
 
-        <article class="bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-8 sm:p-12 md:p-16" style="will-change: scroll-position; contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
+        <article class="bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-8 sm:p-12 md:p-16" style="contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
           <header class="relative mb-12 py-10 sm:py-14 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
             {/* Background Decoration */}
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-docs-accent/5 to-transparent opacity-0 dark:opacity-20 pointer-events-none rounded-full blur-3xl"></div>
@@ -129,41 +129,48 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
             <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
           </div>
           
-          <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
-              <div class="flex justify-start">
+          {/* 前后文章导航 - 只在至少有一篇时显示 */}
+          {(prevPost || nextPost) && (
+            <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                 {prevPost && prevPostId ? (
-                  <a
-                    href={`/posts/${prevPostId}`}
-                    class="group w-full text-left p-4 -ml-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
-                  >
-                    <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
-                      <ArrowLeft size={14} /> 上一篇
-                    </div>
-                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
-                      {prevPost.data.title}
-                    </div>
-                  </a>
-                ) : <div />}
-              </div>
-
-              <div class="flex justify-end">
+                  <div class="flex justify-start">
+                    <a
+                      href={`/posts/${prevPostId}`}
+                      class="group w-full text-left p-4 -ml-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
+                    >
+                      <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                        <ArrowLeft size={14} /> 上一篇
+                      </div>
+                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                        {prevPost.data.title}
+                      </div>
+                    </a>
+                  </div>
+                ) : (
+                  <div />
+                )}
+                
                 {nextPost && nextPostId ? (
-                  <a
-                    href={`/posts/${nextPostId}`}
-                    class="group w-full text-right p-4 -mr-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
-                  >
-                    <div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
-                      下一篇 <ArrowRight size={14} />
-                    </div>
-                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
-                      {nextPost.data.title}
-                    </div>
-                  </a>
-                ) : <div />}
+                  <div class="flex justify-end">
+                    <a
+                      href={`/posts/${nextPostId}`}
+                      class="group w-full text-right p-4 -mr-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
+                    >
+                      <div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                        下一篇 <ArrowRight size={14} />
+                      </div>
+                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                        {nextPost.data.title}
+                      </div>
+                    </a>
+                  </div>
+                ) : (
+                  <div />
+                )}
               </div>
             </div>
-          </div>
+          )}
 
           <Comment client:load />
         </article>
