@@ -6,7 +6,7 @@ import Footer from '../../components/Footer';
 import MarkdownRenderer from '../../components/MarkdownRenderer';
 import AuthorCard from '../../components/AuthorCard';
 import ParticlesBackground from '../../components/ParticlesBackground';
-import Progress itBar from '../../components/ProgressBar';
+import ProgressBar from '../../components/ProgressBar';
 import TableOfContents from '../../components/TableOfContents';
 import ScrollToTop from '../../components/ScrollToTop';
 import Comment from '../../components/Comment';
@@ -14,9 +14,6 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { calculateReadingTime } from '../../utils/readingTime';
 import { generateShortId } from '../../utils/slug';
 import { FEATURES } from '../../config';
-
-// 获取 Astro 全局配置中的站点信息
-import { SITE } from '../../config';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -47,12 +44,9 @@ const prevPostId = prevPost ? generateShortId(prevPost.id) : null;
 const nextPostId = nextPost ? generateShortId(nextPost.id) : null;
 
 const readingTime = post.data.readingTime || calculateReadingTime(post.body);
-
-// 从 SITE 配置中获取网站名称，如果没有则使用默认值
-const siteTitle = SITE?.title || 'Astro Blog';
 ---
 
-<BaseLayout title={`${post.data.title} | ${siteTitle}`}>
+<BaseLayout title={`${post.data.title} | 王苏洋Blog`}>
   <div class="min-h-screen relative flex flex-col">
     {FEATURES.readingProgress && <ProgressBar client:load />}
     {FEATURES.tableOfContents && <TableOfContents client:load />}
