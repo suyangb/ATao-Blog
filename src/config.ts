@@ -9,9 +9,9 @@ export const SITE_DESCRIPTION = "一个爱折腾的普通人";
 // ============================================
 export const HOME_PAGE = {
   // 诗句或名言
-  verse: "失败也是我需要的，\n它和成功对我一样有价值。",
+  verse: "会当凌绝顶，\n一览众山小。",
   // 出处
-  source: "爱迪生",
+  source: "杜甫",
   // 是否显示粒子背景
   showParticles: true,
   // 是否显示标签筛选
