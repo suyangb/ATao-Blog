@@ -169,7 +169,7 @@ export const FEATURES = {
 // ============================================
 export const TWIKOO = {
   // Twikoo 环境 ID (自建时填写地址)
-  envId: 'https://twikoo-eo-mrowgpmj.edgeone.cool',
+  envId: 'https://twikoo.wsyblog.cn',
 };
 
 // ============================================
