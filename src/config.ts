@@ -169,7 +169,7 @@ export const FEATURES = {
 // ============================================
 export const TWIKOO = {
   // Twikoo 环境 ID (自建时填写地址)
-  envId: 'https://pinglun.wsyblog.cn',
+  envId: 'https://twikoo-eo-mrowgpmj.edgeone.cool/?eo_token=1af60d02684ac422e4992df70d3245b9&eo_time=1775064291',
 };
 
 // ============================================
