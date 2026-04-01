@@ -9,9 +9,9 @@ export const SITE_DESCRIPTION = "一个爱折腾的普通人";
 // ============================================
 export const HOME_PAGE = {
   // 诗句或名言
-  verse: "路漫漫其修远兮，\n吾将上下而求索。",
+  verse: "失败也是我需要的，\n它和成功对我一样有价值。",
   // 出处
-  source: "屈原《离骚》",
+  source: "爱迪生",
   // 是否显示粒子背景
   showParticles: true,
   // 是否显示标签筛选
