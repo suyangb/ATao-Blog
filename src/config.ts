@@ -8,10 +8,17 @@ export const SITE_DESCRIPTION = "一个爱折腾的普通人";
 // 首页配置
 // ============================================
 export const HOME_PAGE = {
-  // 诗句或名言
-  verse: "会当凌绝顶，\n一览众山小。",
-  // 出处
-  source: "杜甫",
+  // 随机名言数组
+  verses: [
+    { text: "会当凌绝顶，\n一览众山小。", source: "杜甫" },
+    { text: "长风破浪会有时，\n直挂云帆济沧海。", source: "李白" },
+    { text: "路漫漫其修远兮，\n吾将上下而求索。", source: "屈原" },
+    { text: "非淡泊无以明志，\n非宁静无以致远。", source: "诸葛亮" },
+    { text: "仰天大笑出门去，\n我辈岂是蓬蒿人。", source: "李白" },
+    { text: "人生自古谁无死，\n留取丹心照汗青。", source: "文天祥" },
+    { text: "但愿人长久，\n千里共婵娟。", source: "苏轼" },
+    { text: "海内存知己，\n天涯若比邻。", source: "王勃" },
+  ],
   // 是否显示粒子背景
   showParticles: true,
   // 是否显示标签筛选
@@ -153,7 +160,7 @@ export const ICP_INFO = {
 // ============================================
 export const FEATURES = {
   // 是否启用粒子背景
-  particles: false,
+  particles: true,
   // 是否启用阅读进度条
   readingProgress: true,
   // 是否启用目录
