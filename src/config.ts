@@ -26,11 +26,11 @@ export const HOME_PAGE = {
 export const NAVBAR = {
   // 导航链接
   links: [
-    { label: '首页', href: '/', icon: Home },
-    { label: '归档', href: '/archive', icon: Archive },
-    { label: '友链', href: '/link', icon: Link2 },
-    { label: '开往', href: 'https://www.travellings.cn/go.html', target: '_blank', icon: Train },
-    { label: '关于', href: '/about', icon: User },
+    { label: '首页', href: '/' },
+    { label: '归档', href: '/archive' },
+    { label: '友链', href: '/link' },
+    { label: '开往', href: 'https://www.travellings.cn/go.html', target: '_blank' },
+    { label: '关于', href: '/about' },
   ],
 };
   // Logo 文字（如果为空则只显示图标）
