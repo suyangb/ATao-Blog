@@ -212,7 +212,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
       const postsContainer = document.getElementById('posts-container');
       const postsPerPage = parseInt(postsContainer?.dataset.postsPerPage || '0');
 
-      // 初始化搜索
       if (initialSearchQuery) {
         const initSearch = () => {
           window.dispatchEvent(new CustomEvent('search-updated', {
@@ -228,7 +227,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         initSearch();
       }
 
-      // 获取所有文章数据
       function getPostsData() {
         const postsData = [];
         document.querySelectorAll('[data-post-card]').forEach(card => {
@@ -243,13 +241,11 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         return postsData;
       }
 
-      // 更新筛选
       function updateFilters() {
         const query = searchQuery.toLowerCase().trim();
         const tag = selectedTag;
         currentPage = 1;
 
-        // 标题切换
         const searchHeader = document.getElementById('search-header');
         const normalHeader = document.getElementById('normal-header');
         const searchQueryEl = document.getElementById('search-query');
@@ -262,7 +258,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           normalHeader?.classList.remove('hidden');
         }
 
-        // 筛选可见文章
         const postsData = getPostsData();
         const visiblePosts = [];
         postsData.forEach(post => {
@@ -278,7 +273,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           if (matches) visiblePosts.push(post);
         });
 
-        // 分页显示
         const visibleCount = visiblePosts.length;
         const noResults = document.getElementById('no-results');
         const postsContainer = document.getElementById('posts-container');
@@ -299,7 +293,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         noResults?.classList.add('hidden');
         postsContainer?.classList.remove('hidden');
 
-        // 应用分页
         if (postsPerPage > 0) {
           const totalPages = Math.ceil(visibleCount / postsPerPage);
           const start = (currentPage - 1) * postsPerPage;
@@ -318,21 +311,30 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           document.getElementById('pagination')?.classList.add('hidden');
         }
 
-        // 标签按钮样式
         document.querySelectorAll('[data-tag-filter]').forEach(btn => {
           const btnTag = btn.dataset.tagFilter || null;
           const isAll = btnTag === '';
           const active = (selectedTag === null && isAll) || (selectedTag === btnTag);
 
-          const activeClasses = ['bg-slate-800','text-white','border-slate-800','dark:bg-white','dark:text-slate-900','dark:border-white','shadow-md'];
-          const normalClasses = ['bg-transparent','text-slate-600','border-slate-200','dark:text-slate-400','dark:border-white/10','hover:bg-slate-50','hover:border-docs-accent/50','hover:text-docs-accent','dark:hover:bg-white/5','dark:hover:border-dark-accent/50','dark:hover:text-dark-accent'];
-
-          btn.classList.remove(...activeClasses, ...normalClasses);
-          btn.classList.add(active ? activeClasses : normalClasses);
+          const activeClasses = [
+            'bg-slate-800', 'text-white', 'border-slate-800',
+            'dark:bg-white', 'dark:text-slate-900', 'dark:border-white',
+            'shadow-md', 'hover:bg-slate-900', 'hover:text-white', 'hover:border-slate-900',
+            'dark:hover:bg-slate-100', 'dark:hover:text-slate-900', 'dark:hover:border-white'
+          ];
+          
+          const inactiveClasses = [
+            'bg-transparent', 'text-slate-600', 'border-slate-200',
+            'dark:text-slate-400', 'dark:border-white/10',
+            'hover:bg-slate-50', 'hover:border-docs-accent/50', 'hover:text-docs-accent',
+            'dark:hover:bg-white/5', 'dark:hover:border-dark-accent/50', 'dark:hover:text-dark-accent'
+          ];
+          
+          btn.classList.remove(...activeClasses, ...inactiveClasses);
+          btn.classList.add(active ? activeClasses : inactiveClasses);
         });
       }
 
-      // 生成分页
       function updatePagination(totalPages) {
         const pagination = document.getElementById('pagination');
         if (!pagination) return;
@@ -344,68 +346,97 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         pagination.classList.remove('hidden');
         pagination.innerHTML = '';
 
-        // 创建页码按钮
-        function mkBtn(n, active = false, ellipsis = false) {
-          const b = document.createElement('button');
-          if (ellipsis) {
-            b.textContent = '…';
-            b.disabled = true;
-            b.className = 'w-9 h-9 flex items-center justify-center text-sm text-slate-400 dark:text-slate-500';
-            return b;
+        const createPageButton = (pageNum, isActive = false, isEllipsis = false) => {
+          const button = document.createElement('button');
+          
+          if (isEllipsis) {
+            button.textContent = '…';
+            button.disabled = true;
+            button.className = 'w-9 h-9 flex items-center justify-center text-sm font-medium text-slate-400 dark:text-slate-500 cursor-default';
+          } else {
+            button.textContent = pageNum.toString();
+            button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 relative overflow-hidden group ${
+              isActive
+                ? 'bg-docs-accent text-white dark:bg-dark-accent shadow-md shadow-docs-accent/20 scale-100 font-bold'
+                : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-white/5 border border-transparent hover:border-docs-accent hover:text-docs-accent hover:bg-docs-accent/5 dark:hover:border-dark-accent dark:hover:text-dark-accent dark:hover:bg-dark-accent/10'
+            }`;
+            
+            if (!isActive) {
+              button.addEventListener('click', () => {
+                goToPage(pageNum);
+              });
+            }
           }
-          b.textContent = n;
-          b.className = `w-9 h-9 flex items-center justify-center rounded text-sm transition ${
-            active 
-              ? 'bg-docs-accent text-white dark:bg-dark-accent font-bold' 
-              : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:border-docs-accent hover:text-docs-accent dark:hover:border-dark-accent dark:hover:text-dark-accent'
+          
+          return button;
+        };
+        
+        // 原始箭头样式（完全恢复你原来的）
+        const createArrowButton = (direction, disabled) => {
+          const button = document.createElement('button');
+          button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 ${
+            disabled
+              ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed bg-transparent'
+              : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-white/5 border border-transparent hover:border-docs-accent hover:text-docs-accent hover:bg-docs-accent/5 dark:hover:border-dark-accent dark:hover:text-dark-accent dark:hover:bg-dark-accent/10'
           }`;
-          if (!active) b.onclick = () => goToPage(n);
-          return b;
-        }
-
-        // 箭头
-        function mkArrow(dir, disabled) {
-          const b = document.createElement('button');
-          b.className = `w-9 h-9 flex items-center justify-center rounded text-sm transition ${
-            disabled ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed' 
-            : 'text-slate-600 dark:text-slate-400 hover:border-docs-accent hover:text-docs-accent dark:hover:border-dark-accent dark:hover:text-dark-accent'
-          }`;
-          b.disabled = disabled;
+          button.disabled = disabled;
+          
           const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('viewBox', '0 0 24 24');
           svg.setAttribute('width', '16');
           svg.setAttribute('height', '16');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('fill', 'none');
           svg.setAttribute('stroke', 'currentColor');
           svg.setAttribute('stroke-width', '2');
           svg.setAttribute('stroke-linecap', 'round');
-          const pl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-          pl.setAttribute('points', dir === 'prev' ? '15 18 9 12 15 6' : '9 18 15 12 9 6');
-          svg.append(pl);
-          b.append(svg);
-          if (!disabled) b.onclick = () => goToPage(dir === 'prev' ? currentPage - 1 : currentPage + 1);
-          return b;
-        }
+          svg.setAttribute('stroke-linejoin', 'round');
+          
+          const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+          polyline.setAttribute('points', direction === 'prev' ? '15 18 9 12 15 6' : '9 18 15 12 9 6');
+          
+          svg.appendChild(polyline);
+          button.appendChild(svg);
+          
+          if (!disabled) {
+            button.addEventListener('click', () => {
+              goToPage(direction === 'prev' ? currentPage - 1 : currentPage + 1);
+            });
+          }
+          
+          return button;
+        };
 
-        // 页码逻辑
-        let pages = [];
+        const pageNumbers = [];
+        
         if (totalPages <= 7) {
-          for (let i = 1; i <= totalPages; i++) pages.push(i);
+          for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(i);
+          }
         } else {
-          pages.push(1);
-          if (currentPage <= 3) pages.push(2,3,4,'...', totalPages);
-          else if (currentPage >= totalPages - 2) pages.push('...', totalPages-3, totalPages-2, totalPages-1, totalPages);
-          else pages.push('...', currentPage-1, currentPage, currentPage+1, '...', totalPages);
+          pageNumbers.push(1);
+          
+          if (currentPage <= 3) {
+            pageNumbers.push(2, 3, 4, 'ellipsis', totalPages);
+          } else if (currentPage >= totalPages - 2) {
+            pageNumbers.push('ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+          } else {
+            pageNumbers.push('ellipsis', currentPage - 1, currentPage, currentPage + 1, 'ellipsis', totalPages);
+          }
         }
-
-        pagination.append(mkArrow('prev', currentPage === 1));
-        pages.forEach(p => {
-          if (p === '...') pagination.append(mkBtn(0, false, true));
-          else pagination.append(mkBtn(p, p === currentPage));
+        
+        pagination.appendChild(createArrowButton('prev', currentPage === 1));
+        
+        pageNumbers.forEach((pageNum) => {
+          if (pageNum === 'ellipsis') {
+            pagination.appendChild(createPageButton(0, false, true));
+          } else {
+            pagination.appendChild(createPageButton(pageNum, pageNum === currentPage));
+          }
         });
-        pagination.append(mkArrow('next', currentPage === totalPages));
+        
+        pagination.appendChild(createArrowButton('next', currentPage === totalPages));
       }
 
-      // 跳页
       function goToPage(page) {
         const query = searchQuery.toLowerCase().trim();
         const tag = selectedTag;
@@ -420,10 +451,8 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         if (page < 1 || page > totalPages) return;
         currentPage = page;
 
-        // 隐藏所有
         postsData.forEach(p => p.element.style.display = 'none');
 
-        // 显示当前页
         const start = (currentPage - 1) * postsPerPage;
         const end = start + postsPerPage;
         const show = visiblePosts.slice(start, end);
@@ -437,7 +466,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         postsContainer?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
-      // 事件监听
       window.addEventListener('tag-filter-changed', e => {
         selectedTag = e.detail.tag === '' ? null : e.detail.tag;
         updateFilters();
@@ -448,7 +476,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         updateFilters();
       });
 
-      // 清除筛选
       document.getElementById('clear-filters')?.addEventListener('click', () => {
         searchQuery = '';
         selectedTag = null;
@@ -457,7 +484,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         updateFilters();
       });
 
-      // 初始化
       updateFilters();
       window.dispatchEvent(new CustomEvent('tag-filter-changed', { detail: { tag: '' } }));
     });
