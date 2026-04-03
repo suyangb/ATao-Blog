@@ -23,14 +23,6 @@ export const HOME_PAGE = {
 // ============================================
 // 导航栏配置
 // ============================================
-import {
-  Home,
-  Archive,
-  Link2,
-  Train,
-  User,
-} from 'lucide-react';
-
 export const NAVBAR = {
   // 导航链接
   links: [
