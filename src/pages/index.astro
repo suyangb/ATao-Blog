@@ -127,6 +127,7 @@ const postsPerPage = HOME_PAGE.postsPerPage;
               data-description={post.data.summary || ''}
               data-content={plainTextContent}
               data-post-id={post.id}
+              class="rounded-xl overflow-hidden"
             >
               <PostCard 
                 client:visible
@@ -203,41 +204,24 @@ const postsPerPage = HOME_PAGE.postsPerPage;
     // 如果 URL 中有搜索参数，自动打开搜索框并设置搜索内容
     // 立即设置搜索状态，不等待 DOM 加载，以获得更好的用户体验
     if (initialSearchQuery) {
-      // 立即触发搜索更新事件，让搜索逻辑立即执行
-      // 这样即使页面还在加载，搜索也会立即生效
-      const initSearch = () => {
-        // 先触发搜索更新事件，这会自动打开搜索框（通过 Navbar 的事件监听器）
-        window.dispatchEvent(new CustomEvent('search-updated', {
-          detail: { query: initialSearchQuery }
-        }));
-        
-        // 额外确保搜索框打开（如果 Navbar 已渲染但事件未触发打开）
-        setTimeout(() => {
-          const searchButton = document.querySelector('button[aria-label="Open search"]') as HTMLButtonElement;
-          const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
-          // 如果搜索框未打开，手动点击按钮
-          if (searchButton && !searchInput) {
-            searchButton.click();
-          }
-          // 确保搜索输入框的值已设置
-          if (searchInput && searchInput.value !== initialSearchQuery) {
-            searchInput.value = initialSearchQuery;
-          }
-        }, 100);
-      };
+      // 立即触发搜索更新事件，这会自动打开搜索框（通过 Navbar 的事件监听器）
+      window.dispatchEvent(new CustomEvent('search-updated', {
+        detail: { query: initialSearchQuery }
+      }));
       
-      // 立即执行一次（如果 DOM 已准备好）
-      if (document.readyState !== 'loading') {
-        initSearch();
-      }
-      
-      // 也监听 DOMContentLoaded，确保在 DOM 准备好后再次执行（以防第一次执行时组件未挂载）
-      document.addEventListener('DOMContentLoaded', () => {
-        // 使用 requestAnimationFrame 确保在下一帧执行，给 React 组件时间挂载
-        requestAnimationFrame(() => {
-          requestAnimationFrame(initSearch);
-        });
-      });
+      // 额外确保搜索框打开（如果 Navbar 已渲染但事件未触发打开）
+      setTimeout(() => {
+        const searchButton = document.querySelector('button[aria-label="Open search"]') as HTMLButtonElement;
+        const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+        // 如果搜索框未打开，手动点击按钮
+        if (searchButton && !searchInput) {
+          searchButton.click();
+        }
+        // 确保搜索输入框的值已设置
+        if (searchInput && searchInput.value !== initialSearchQuery) {
+          searchInput.value = initialSearchQuery;
+        }
+      }, 100);
     }
     
     // Get all posts data
@@ -592,4 +576,3 @@ const postsPerPage = HOME_PAGE.postsPerPage;
     updateFilters();
   </script>
 </BaseLayout>
-
