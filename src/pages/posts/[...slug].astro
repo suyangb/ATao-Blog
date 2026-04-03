@@ -36,17 +36,22 @@ const sortedPosts = allPosts.sort((a, b) => {
 
 const currentIndex = sortedPosts.findIndex(p => generateShortId(p.id) === shortId);
 const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
-const nextPost = currentIndex !== -1< sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+const nextPost = currentIndex !== -1 && currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 
 const prevPostId = prevPost ? generateShortId(prevPost.id) : null;
 const nextPostId = nextPost ? generateShortId(nextPost.id) : null;
 
-const readingTime = post.data.readingTime || calculateReadingTime(post.body);<BaseLayout title={`${post.data.title} | 王苏洋Blog`}>
+const readingTime = post.data.readingTime || calculateReadingTime(post.body);
+---
+
+<BaseLayout title={`${post.data.title} | 王苏洋Blog`}>
   <div class="min-h-screen relative flex flex-col">
-    {FEATURES.read<ProgressBar client:load />}
-    {FEATURES.table<TableOfContents client:load />}
-    {FEATURES<ScrollToTop client:load />}
-    {FEATURE<ParticlesBackground client:load /><Navbar 
+    {FEATURES.readingProgress && <ProgressBar client:load />}
+    {FEATURES.tableOfContents && <TableOfContents client:load />}
+    {FEATURES.scrollToTop && <ScrollToTop client:load />}
+    {FEATURES.particles && <ParticlesBackground client:load />}
+    
+    <Navbar 
       client:load
       currentPath={`/posts/${shortId}`}
       searchQuery=""
@@ -54,105 +59,140 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);<Ba
     />
 
     <main class="flex-1 flex flex-col relative w-full max-w-[98%] mx-auto px-1 sm:px-2 pt-20 sm:pt-24 z-10 overflow-x-hidden">
-<div class="animate-in fade-in slide-in-from-bottom-8 duration-500 w-full">
-<a 
+      <div class="animate-in fade-in slide-in-from-bottom-8 duration-500 w-full">
+        <a 
           href="/"
           class="group mb-4 flex items-center gap-2 text-slate-500 hover:text-docs-accent dark:text-slate-400 dark:hover:text-dark-accent transition-colors"
-       <div class="p-2 rounded-full bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/5 group-hover:-translate-x-1 transition-transform">
-           <ArrowLeft size={18} />
-          <span class="text-sm font-medium</span></a>
+        >
+          <div class="p-2 rounded-full bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/5 group-hover:-translate-x-1 transition-transform">
+            <ArrowLeft size={18} />
+          </div>
+          <span class="text-sm font-medium">返回列表</span>
+        </a>
 
-<article class="w-full max-w-none bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-6 sm:p-8" style="contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;"><!-- 极致压缩header上下内边距，标签上方几乎无空白 --><header class="relative mb-6 py-2 sm:py-3 border-b border-slate-100 dark:border-white/5 text-left overflow<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-docs-accent/5 to-transparent opacity-0 dark:opacity-20 pointer-events-none rounded-full blur-3xl"></div>
+        <article class="w-full max-w-none bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-6 sm:p-8" style="contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
+          <header class="relative mb-6 py-2 sm:py-3 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-docs-accent/5 to-transparent opacity-0 dark:opacity-20 pointer-events-none rounded-full blur-3xl"></div>
             
             <div class="absolute top-0 right-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none rotate-12 scale-150">
-               <svg width="200" height="200" viewBox="0 0 100 100" fill="current<path d="M50 0L61 39L100 50L61 61L50 100L39 61L0 50L39 39L50 0Z" />
+               <svg width="200" height="200" viewBox="0 0 100 100" fill="currentColor">
+                <path d="M50 0L61 39L100 50L61 61L50 100L39 61L0 50L39 39L50 0Z" />
               </svg>
-            <div class="relative z-10 flex flex-col items-start<!-- 标签容器mb-3 → mb-2，极致压缩标签到标题间距 -->
-             <div class="flex flex-wrap justify-start gap-2 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                {post.data.tags.map(tag => (<span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
+            </div>
+
+            <div class="relative z-10 flex flex-col items-start">
+              <div class="flex flex-wrap justify-start gap-2 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                {post.data.tags.map(tag => (
+                  <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
                     #{tag}
-                 </span>
-                ))</div><!-- 标题mb-4 → mb-3，进一步压缩标题到摘要<h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-3 w-full animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
-                {post.data<div class="absolute -bottom-1 left-0 w-24 h-1 bg-docs-accent/30</div>
-</h1>
+                  </span>
+                ))}
+              </div>
 
-              {post.data.summary &&<p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 w-full leading-relaxed mb-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-3 w-full animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
+                {post.data.title}
+                <div class="absolute -bottom-1 left-0 w-24 h-1 bg-docs-accent/30 rounded-full"></div>
+              </h1>
+
+              {post.data.summary && (
+                <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 w-full leading-relaxed mb-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
                   {post.data.summary}
-               </p>
-              )<div class="flex items-center gap-6 text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-                <div class="flex items-center gap-2">
-                 <Calendar size={14} class="text-docs-accent" />
-                  <span>{post.data.date}</div<div class="w-px h-4 bg-slate-200 dark:bg-white</div><div class="flex items-center gap-2<Clock size={14} class="text-docs-accent" /><span>{reading</span>
-                </div>
-              </div</header><MarkdownRenderer client:load content={post<!-- 优化版THE END 文章结束标识 -->
-         <div class="mt-12 mb-8 flex items-center justify-center gap-<div class="w-20 h-[1.5px] bg-slate-300 dark:bg-slate-600"><span class="text-base font-serif text-slate-600 dark:text-slate-300 tracking-widest font-medium">THE END</span>
-            <div class="w-20 h-[1.5px] bg-slate-300 dark:bg-slate-600"></div>
-          <!-- THE END下方优化间距的打赏按钮 + 弹窗 --><div class="mb-12 flex justify-center relative">
-            <button id="rewardBtn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-600 transition-all duration-300">
-              <Coffee size={16}<span></span>
-</button>
+                </p>
+              )}
 
-           <!-- 打赏弹窗 --><div id="rewardModal" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-50"><div class="w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4">
-<div class="text-center mb-3">
-<h3 class="text-sm font-bold text-slate-900 dark:text-white">请作者喝</h3></div>
-<div class="flex justify-center mb-2"><img src="https://qrcode.show/wechat" alt="赞赏码" class="w-36 h-36 rounded object-cover"</div><button id="closeReward" class="absolute top-2 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                  ✕
+              <div class="flex items-center gap-6 text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+                <div class="flex items-center gap-2">
+                  <Calendar size={14} class="text-docs-accent" />
+                  <span>{post.data.date}</span>
+                </div>
+                <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
+                <div class="flex items-center gap-2">
+                  <Clock size={14} class="text-docs-accent" />
+                  <span>{readingTime}</span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <MarkdownRenderer client:load content={post.body} />
+
+          <!-- THE END -->
+          <div class="mt-12 mb-8 flex items-center justify-center gap-4">
+            <div class="w-20 h-[1.5px] bg-slate-300 dark:bg-slate-600"></div>
+            <span class="text-base font-serif text-slate-600 dark:text-slate-300 tracking-widest">THE END</span>
+            <div class="w-20 h-[1.5px] bg-slate-300 dark:bg-slate-600"></div>
+          </div>
+
+          <!-- 打赏按钮 -->
+          <div class="mb-12 flex justify-center">
+            <button onclick="document.getElementById('reward').classList.remove('hidden')"
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-600">
+              <Coffee size={16} />
+              <span>打赏</span>
+            </button>
+          </div>
+
+          <!-- 极简全屏弹窗 -->
+          <div id="reward" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 max-w-xs w-full mx-4">
+              <div class="text-center mb-3">
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">请作者喝杯咖啡</h3>
+              </div>
+              <div class="flex justify-center mb-3">
+                <img src="https://qrcode.show/wechat" alt="赞赏码" class="w-36 h-36 rounded">
+              </div>
+              <div class="text-center">
+                <button onclick="document.getElementById('reward').classList.add('hidden')"
+                  class="px-4 py-2 rounded-lg bg-slate-200 dark:bg-slate-700 text-sm">
+                  关闭
                 </button>
-              </div</div><div class="mt-10 pt-10 border-t-2 border-slate-200 dark:border-slate-700">
-<AuthorCard client:load title={post.data.title} summary={post.data.summary</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10 pt-10 border-t-2 border-slate-200 dark:border-slate-700">
+            <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
+          </div>
           
-          {(prevPost || nextPost) &&<div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5"><div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+          {(prevPost || nextPost) && (
+            <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                 {prevPost && prevPostId ? (
-                  <div class="flex justify-start<a
-                      href={`/posts/${prevPostId}`}
-                      class="group w-full text-left p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
-                    >
-                      <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:hover:text-dark-accent">
-                       <ArrowLeft size={14} /> 上一篇</div>
-<div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:hover:text-dark-accent">
-                        {prevPost.data</div</a></div>
-<div />}
+                  <div class="flex justify-start">
+                    <a href={`/posts/${prevPostId}`}
+                      class="group w-full text-left p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5">
+                      <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold">
+                        <ArrowLeft size={14} /> 上一篇
+                      </div>
+                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2">
+                        {prevPost.data.title}
+                      </div>
+                    </a>
+                  </div>
+                ) : <div />}
                 
-                {nextPost && nextPostId ? (<div class="flex justify-end">
-                   <a
-                      href={`/posts/${nextPostId}`}
-                      class="group w-full text-right p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
-                    ><div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:hover:text-dark-accent">
-                        <ArrowRight size={14} />
-</div>
-                     <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:hover:text-dark-accent">
-                        {nextPost.data.title</div></a>
-</div>
-               <div />}</div>
-</div>
-         <Comment client:load />
+                {nextPost && nextPostId ? (
+                  <div class="flex justify-end">
+                    <a href={`/posts/${nextPostId}`}
+                      class="group w-full text-right p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5">
+                      <div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold">
+                        下一篇 <ArrowRight size={14} />
+                      </div>
+                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2">
+                        {nextPost.data.title}
+                      </div>
+                    </a>
+                  </div>
+                ) : <div />}
+              </div>
+            </div>
+          )}
+
+          <Comment client:load />
         </article>
+      </div>
+
       <Footer client:load />
     </main>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const btn = document.getElementById('rewardBtn');
-      const modal = document.getElementById('rewardModal');
-      const close = document.getElementById('closeReward');
-
-      // 点击打赏按钮弹出弹窗
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        modal.classList.toggle('hidden');
-      });
-
-      // 关闭按钮关闭弹窗
-      close.addEventListener('click', () => {
-        modal.classList.add('hidden');
-      });
-
-      // 点击页面空白处关闭弹窗
-      document.addEventListener('click', () => {
-        modal.classList.add('hidden');
-      });
-
-      // 阻止点击弹窗内部关闭
-      modal.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-</script</BaseLayout>
+  </div>
+</BaseLayout>
