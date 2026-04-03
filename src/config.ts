@@ -153,7 +153,7 @@ export const ICP_INFO = {
 // ============================================
 export const FEATURES = {
   // 是否启用粒子背景
-  particles: true,
+  particles: false,
   // 是否启用阅读进度条
   readingProgress: true,
   // 是否启用目录
