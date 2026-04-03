@@ -84,49 +84,52 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);<Ba
                  <Calendar size={14} class="text-docs-accent" />
                   <span>{post.data.date}</div<div class="w-px h-4 bg-slate-200 dark:bg-white</div><div class="flex items-center gap-2<Clock size={14} class="text-docs-accent" /><span>{reading</span>
                 </div>
-              </div</header><MarkdownRenderer client:load content={post<!-- THE END 文章结束标识<div class="mt-10 mb-6 flex items-center justify-center gap-3">
-<div class="w-16 h-px bg-slate-200 dark:bg-slate</div<span class="text-sm font-serif text-slate-500 dark:text-slate-400 tracking-widest</span><div class="w-16 h-px bg-slate-200 dark:bg-slate-700"></div<!-- THE END下方打赏按钮 + <div class="mb-10 flex justify-center relative">
-<button id="rewardBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-600 transition-all duration-300">
-<Coffee size={16} />
-              </span</button><!-- 打赏<div id="rewardModal" class="hidden absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-5<div class="w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4<div class="text-center mb-3<h3 class="text-sm font-bold text-slate-900 dark:text-white">请</h</div<div class="flex justify-center mb-<img src="https://qrcode.show/wechat" alt="赞赏码" class="w-36 h-36 rounded object-cover" />
-                <button id="closeReward" class="absolute top-2 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                  ✕</button>
-</div>
-            </div>
-          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700<AuthorCard client:load title={post.data.title} summary={post.data.summary} />
-         </div>
+              </div</header><MarkdownRenderer client:load content={post<!-- 优化版THE END 文章结束标识 -->
+         <div class="mt-12 mb-8 flex items-center justify-center gap-<div class="w-20 h-[1.5px] bg-slate-300 dark:bg-slate-600"><span class="text-base font-serif text-slate-600 dark:text-slate-300 tracking-widest font-medium">THE END</span>
+            <div class="w-20 h-[1.5px] bg-slate-300 dark:bg-slate-600"></div>
+          <!-- THE END下方优化间距的打赏按钮 + 弹窗 --><div class="mb-12 flex justify-center relative">
+            <button id="rewardBtn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-600 transition-all duration-300">
+              <Coffee size={16}<span></span>
+</button>
+
+           <!-- 打赏弹窗 --><div id="rewardModal" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-50"><div class="w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4">
+<div class="text-center mb-3">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white">请作者喝</h3></div>
+<div class="flex justify-center mb-2"><img src="https://qrcode.show/wechat" alt="赞赏码" class="w-36 h-36 rounded object-cover"</div><button id="closeReward" class="absolute top-2 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                  ✕
+                </button>
+              </div</div><div class="mt-10 pt-10 border-t-2 border-slate-200 dark:border-slate-700">
+<AuthorCard client:load title={post.data.title} summary={post.data.summary</div>
           
-          {(prevPost || nextPost) && (
-            <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+          {(prevPost || nextPost) &&<div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5"><div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                 {prevPost && prevPostId ? (
-<div class="flex justify-start">
-                    <a
+                  <div class="flex justify-start<a
                       href={`/posts/${prevPostId}`}
                       class="group w-full text-left p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
                     >
-<div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:hover:text-dark-accent"><ArrowLeft size={14} /> </div<div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:hover:text-dark-accent">
-                        {prevPost.data.title}
-                      </div>
-                    </div>
-                ) : <div />}
+                      <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:hover:text-dark-accent">
+                       <ArrowLeft size={14} /> 上一篇</div>
+<div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:hover:text-dark-accent">
+                        {prevPost.data</div</a></div>
+<div />}
                 
-                {nextPost && nextPostId<div class="flex justify-end"><a
+                {nextPost && nextPostId ? (<div class="flex justify-end">
+                   <a
                       href={`/posts/${nextPostId}`}
                       class="group w-full text-right p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
-<div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:hover:text-dark-accent">
-<ArrowRight size={14}</div><div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:hover:text-dark-accent">
-                        {nextPost.data.title}
-                      </div>
-                    </div><div</div</div>
-          )}
-
-         <Comment client:load /></article>
+                    ><div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:hover:text-dark-accent">
+                        <ArrowRight size={14} />
 </div>
-
-     <Footer client:load /></main>
+                     <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:hover:text-dark-accent">
+                        {nextPost.data.title</div></a>
 </div>
-
- <script>
+               <div />}</div>
+</div>
+         <Comment client:load />
+        </article>
+      <Footer client:load />
+    </main>
+  <script>
     document.addEventListener('DOMContentLoaded', () => {
       const btn = document.getElementById('rewardBtn');
       const modal = document.getElementById('rewardModal');
@@ -152,5 +155,4 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);<Ba
       modal.addEventListener('click', (e) => {
         e.stopPropagation();
       });
-    });
- </BaseLayout>
+</script</BaseLayout>
