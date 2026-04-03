@@ -15,21 +15,21 @@ export default {
         serif: ['Merriweather', 'Noto Serif SC', 'Songti SC', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
       },
       colors: {
-        // 对应 config.ts 中的 THEME_COLORS.light
+        // MangoCat 浅色主题
         docs: {
-          bg: '#FAFBFC',
-          paper: '#FFFFFF',
-          text: '#1F2937',
-          accent: '#4285F4',
-          muted: '#6B7280',
+          bg: '#fdfbf6',
+          paper: '#ffffff',
+          text: '#333333',
+          accent: '#f97316',
+          muted: '#888888',
         },
-        // 对应 config.ts 中的 THEME_COLORS.dark
+        // MangoCat 暗色主题
         dark: {
-          bg: '#0A0B0E',
-          paper: '#131418',
-          text: '#E5E7EB',
-          accent: '#60A5FA',
-          muted: '#9CA3AF',
+          bg: '#111827',
+          paper: '#1f2937',
+          text: '#f3f4f6',
+          accent: '#fb923c',
+          muted: '#9ca3af',
         }
       },
       keyframes: {
@@ -106,4 +106,3 @@ export default {
   },
   plugins: [],
 }
-
