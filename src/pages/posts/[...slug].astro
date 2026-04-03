@@ -58,21 +58,20 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
       setSearchQuery={() => {}}
     />
 
-    <main class="flex-1 flex flex-col relative w-full max-w-[98%] mx-auto px-1 sm:px-2 pt-20 sm:pt-24 z-10 overflow-x-hidden">
-      <div class="animate-in fade-in slide-in-from-bottom-8 duration-500 w-full">
+    <main class="flex-1 flex flex-col relative w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 z-10 overflow-x-hidden">
+      <div class="animate-in fade-in slide-in-from-bottom-8 duration-700 w-full">
         <a 
           href="/"
-          class="group mb-4 flex items-center gap-2 text-slate-500 hover:text-docs-accent dark:text-slate-400 dark:hover:text-dark-accent transition-colors"
+          class="group mb-6 flex items-center gap-2 text-slate-500 hover:text-docs-accent dark:text-slate-400 dark:hover:text-dark-accent transition-all duration-300"
         >
-          <div class="p-2 rounded-full bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/5 group-hover:-translate-x-1 transition-transform">
+          <div class="p-2 rounded-full bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/5 group-hover:-translate-x-1 group-hover:shadow-md transition-all duration-300">
             <ArrowLeft size={18} />
           </div>
           <span class="text-sm font-medium">返回列表</span>
         </a>
 
-        <article class="w-full max-w-none bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-6 sm:p-8" style="contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
-          <!-- 极致压缩header上下内边距，标签上方几乎无空白 -->
-          <header class="relative mb-6 py-2 sm:py-3 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
+        <article class="w-full max-w-none bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-md dark:shadow-lg border border-slate-100/50 dark:border-white/5 p-6 sm:p-8 lg:p-10" style="contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
+          <header class="relative mb-8 py-4 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-docs-accent/5 to-transparent opacity-0 dark:opacity-20 pointer-events-none rounded-full blur-3xl"></div>
             
             <div class="absolute top-0 right-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none rotate-12 scale-150">
@@ -82,23 +81,21 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
             </div>
 
             <div class="relative z-10 flex flex-col items-start">
-              <!-- 标签容器mb-3 → mb-2，极致压缩标签到标题间距 -->
-              <div class="flex flex-wrap justify-start gap-2 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div class="flex flex-wrap justify-start gap-2 mb-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {post.data.tags.map(tag => (
-                  <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent hover:scale-105 transition-all duration-300 cursor-default">
                     #{tag}
                   </span>
                 ))}
               </div>
 
-              <!-- 标题mb-4 → mb-3，进一步压缩标题到摘要间距 -->
-              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-3 w-full animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
+              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-4 w-full animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
                 {post.data.title}
-                <div class="absolute -bottom-1 left-0 w-24 h-1 bg-docs-accent/30 rounded-full"></div>
+                <div class="absolute -bottom-2 left-0 w-32 h-1.5 bg-gradient-to-r from-docs-accent to-transparent rounded-full"></div>
               </h1>
 
               {post.data.summary && (
-                <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 w-full leading-relaxed mb-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+                <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 w-full leading-relaxed mb-5 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
                   {post.data.summary}
                 </p>
               )}
@@ -119,23 +116,23 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 
           <MarkdownRenderer client:load content={post.body} />
 
-          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
+          <div class="mt-14 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
             <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
           </div>
           
           {(prevPost || nextPost) && (
-            <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
+            <div class="mt-14 pt-10 border-t border-slate-100 dark:border-white/5">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
                 {prevPost && prevPostId ? (
                   <div class="flex justify-start">
                     <a
                       href={`/posts/${prevPostId}`}
-                      class="group w-full text-left p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
+                      class="group w-full text-left p-5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 hover:shadow-md"
                     >
-                      <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                      <div class="flex items-center gap-2 text-slate-400 mb-3 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent transition-colors">
                         <ArrowLeft size={14} /> 上一篇
                       </div>
-                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent transition-colors">
                         {prevPost.data.title}
                       </div>
                     </a>
@@ -146,12 +143,12 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
                   <div class="flex justify-end">
                     <a
                       href={`/posts/${nextPostId}`}
-                      class="group w-full text-right p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
+                      class="group w-full text-right p-5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 hover:shadow-md"
                     >
-                      <div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                      <div class="flex items-center gap-2 justify-end text-slate-400 mb-3 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent transition-colors">
                         下一篇 <ArrowRight size={14} />
                       </div>
-                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent transition-colors">
                         {nextPost.data.title}
                       </div>
                     </a>
@@ -161,11 +158,13 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
             </div>
           )}
 
-          <Comment client:load />
+          <div class="mt-14 pt-10 border-t border-slate-100 dark:border-white/5">
+            <Comment client:load />
+          </div>
         </article>
       </div>
 
-      <Footer client:load />
+      <Footer client:idle />
     </main>
   </div>
 </BaseLayout>
