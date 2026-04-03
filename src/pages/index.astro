@@ -14,31 +14,20 @@ import { generateShortId } from '../utils/slug';
 // Function to convert markdown to plain text for search
 function markdownToPlainText(markdown: string): string {
   return markdown
-    // Remove code blocks
     .replace(/```[\s\S]*?```/g, '')
-    // Remove inline code
     .replace(/`[^`]+`/g, '')
-    // Remove images
     .replace(/!\[([^\]]*)\]\([^\)]+\)/g, '')
-    // Remove links but keep text
     .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
-    // Remove headers
     .replace(/^#{1,6}\s+(.+)$/gm, '$1')
-    // Remove bold/italic markers
     .replace(/\*\*([^*]+)\*\*/g, '$1')
     .replace(/\*([^*]+)\*/g, '$1')
     .replace(/__([^_]+)__/g, '$1')
     .replace(/_([^_]+)_/g, '$1')
-    // Remove horizontal rules
     .replace(/^---$/gm, '')
-    // Remove list markers
     .replace(/^[\s]*[-*+]\s+/gm, '')
     .replace(/^[\s]*\d+\.\s+/gm, '')
-    // Remove blockquotes
     .replace(/^>\s+/gm, '')
-    // Remove HTML tags
     .replace(/<[^>]+>/g, '')
-    // Clean up multiple spaces and newlines
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -50,10 +39,7 @@ const posts = allPosts.sort((a, b) => {
   return dateB.getTime() - dateA.getTime();
 });
 
-// Get all unique tags
 const allTags = Array.from(new Set(posts.flatMap(post => post.data.tags))).sort();
-
-// Get posts per page from config
 const postsPerPage = HOME_PAGE.postsPerPage;
 ---
 
@@ -81,7 +67,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
                 <div class="space-y-4 w-full max-w-xl mx-auto">
                   {(() => {
                     const verse = HOME_PAGE.verse;
-                    // 尝试按换行符分割
                     if (verse.includes('\n')) {
                       const parts = verse.split('\n');
                       return (
@@ -95,7 +80,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
                         </>
                       );
                     }
-                    // 默认显示整句
                     return (
                       <div class="text-left">
                         <span class="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white font-serif">{verse}</span>
@@ -111,13 +95,13 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           </div>
         </div>
 
-        <!-- 社交图标 - 靠左 + 抖音 -->
-        <div class="flex items-center justify-start gap-5 my-2 ml-14 sm:ml-16 text-slate-600 dark:text-slate-400">
+        <!-- 社交图标 - 完全靠左 + 清晰抖音图标 -->
+        <div class="flex items-center justify-start gap-5 my-2 ml-0 text-slate-600 dark:text-slate-400">
           <a href="https://github.com/suyangb" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-black dark:hover:text-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
           </a>
-          <a href="https://www.douyin.com/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-slate-800 dark:hover:text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a3 3 0 1 0 6 0 3 3 0 1 0 -6 0"></path><path d="M17.5 6.5h1.5v1.5"></path><path d="M17.5 9.5v1.5"></path><path d="M17 5a1 1 0 0 1 1 1"></path><path d="M17 12a5 5 0 1 1 -10 0 5 5 0 0 1 10 0z"></path></svg>
+          <a href="https://www.douyin.com/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-black dark:hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a3 3 0 1 0 6 0 3 3 0 1 0 -6 0" /><path d="M17 5v14a1 1 0 0 1 -1 1H8a1 1 0 0 1 -1 -1V5a1 1 0 0 1 1 -1h8a1 1 0 0 1 1 1z" /></svg>
           </a>
           <a href="mailto:your@email.com" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-red-400">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -125,10 +109,8 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         </div>
 
         <div class="relative">
-          {/* 右侧标签筛选器 */}
           {HOME_PAGE.showTagFilters && <TagFilters client:idle tags={allTags} />}
           
-          {/* 文章列表 */}
           <div class="grid grid-cols-1 gap-8 min-h-[200px]" id="posts-container" data-posts-per-page={postsPerPage}>
           {posts.map((post) => {
             const plainTextContent = markdownToPlainText(post.body);
@@ -158,10 +140,8 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           })}
           </div>
           
-          {/* 分页控件 */}
           {postsPerPage > 0 && (
             <div id="pagination" class="hidden flex flex-wrap items-center justify-center gap-1.5 mt-12 mb-8">
-              {/* Page numbers will be dynamically generated by JavaScript */}
             </div>
           )}
         </div>
@@ -186,7 +166,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
   </div>
 
   <script>
-    // Search and filter state
     let initialSearchQuery = '';
     try {
       const pendingQuery = sessionStorage.getItem('pendingSearchQuery');
