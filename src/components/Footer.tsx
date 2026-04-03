@@ -3,13 +3,11 @@ import { ICP_INFO } from '../config';
 
 export default function Footer() {
   const [siteTime, setSiteTime] = useState('');
-  // 假设访问量，实际可从接口/配置替换
-  const siteViews = '100,868';
 
   // 计算网站运行时间
   useEffect(() => {
     // 这里改成你的网站上线日期
-    const launchDate = new Date('2024-01-01 00:00:00');
+    const launchDate = new Date('2025-07-17 00:00:00');
 
     const updateTime = () => {
       const now = new Date();
@@ -57,9 +55,6 @@ export default function Footer() {
         <span className="text-slate-300 dark:text-slate-600">·</span>
         {/* 本站运行时间 */}
         <span>已运行 {siteTime}</span>
-        <span className="text-slate-300 dark:text-slate-600">·</span>
-        {/* 访问量 */}
-        <span>访问量 {siteViews}</span>
         <span className="text-slate-300 dark:text-slate-600">·</span>
         <a
           href="/rss.xml"
