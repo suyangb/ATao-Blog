@@ -17,7 +17,7 @@ export const HOME_PAGE = {
   // 是否显示标签筛选
   showTagFilters: true,
   // 每页显示的文章数量（0 表示显示全部）
-  postsPerPage: 5,
+  postsPerPage: 8,
 };
 
 // ============================================
