@@ -7,7 +7,7 @@ import PostCard from '../components/PostCard';
 import ParticlesBackground from '../components/ParticlesBackground';
 import TagFilters from '../components/TagFilters';
 import { BLOG_NAME, SITE_DESCRIPTION, HOME_PAGE, NAVBAR, FEATURES } from '../config';
-import { Search } from 'lucide-react';
+import { Search, Github, Bilibili, Mail } from 'lucide-react';
 import { calculateReadingTime } from '../utils/readingTime';
 import { generateShortId } from '../utils/slug';
 
@@ -109,6 +109,22 @@ const postsPerPage = HOME_PAGE.postsPerPage;
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- 社交图标 -->
+        <div class="flex items-center justify-center gap-5 my-2 text-slate-600 dark:text-slate-400">
+          <a href="https://github.com/suyangb" target="_blank" rel="noopener noreferrer"
+             class="transition-colors hover:text-black dark:hover:text-white">
+            <Github size={20} />
+          </a>
+          <a href="https://bilibili.com/" target="_blank" rel="noopener noreferrer"
+             class="transition-colors hover:text-pink-500">
+            <Bilibili size={20} />
+          </a>
+          <a href="mailto:your@email.com" target="_blank" rel="noopener noreferrer"
+             class="transition-colors hover:text-red-400">
+            <Mail size={20} />
+          </a>
         </div>
 
         <div class="relative">
@@ -465,30 +481,23 @@ const postsPerPage = HOME_PAGE.postsPerPage;
       const pageNumbers: (number | 'ellipsis')[] = [];
       
       if (totalPages <= 7) {
-        // Show all pages if 7 or fewer
         for (let i = 1; i <= totalPages; i++) {
           pageNumbers.push(i);
         }
       } else {
-        // Always show first page
         pageNumbers.push(1);
         
         if (currentPage <= 3) {
-          // Near the start
           pageNumbers.push(2, 3, 4, 'ellipsis', totalPages);
         } else if (currentPage >= totalPages - 2) {
-          // Near the end
           pageNumbers.push('ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
         } else {
-          // In the middle
           pageNumbers.push('ellipsis', currentPage - 1, currentPage, currentPage + 1, 'ellipsis', totalPages);
         }
       }
       
-      // Add prev button
       pagination.appendChild(createArrowButton('prev', currentPage === 1));
       
-      // Add page number buttons
       pageNumbers.forEach((pageNum) => {
         if (pageNum === 'ellipsis') {
           pagination.appendChild(createPageButton(0, false, true));
@@ -497,7 +506,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         }
       });
       
-      // Add next button
       pagination.appendChild(createArrowButton('next', currentPage === totalPages));
     }
     
@@ -507,7 +515,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
       const postsData = getPostsData();
       const visiblePosts: Array<{title: string, tags: string[], element: HTMLElement}> = [];
       
-      // Get visible posts
       postsData.forEach(({ title, tags, content, element }) => {
         const matchesSearch = !query || 
           title.toLowerCase().includes(query) || 
@@ -528,12 +535,10 @@ const postsPerPage = HOME_PAGE.postsPerPage;
       
       currentPage = page;
       
-      // Hide all posts first
       postsData.forEach(({ element }) => {
         if (element) element.style.display = 'none';
       });
       
-      // Show posts for current page
       const startIndex = (currentPage - 1) * postsPerPage;
       const endIndex = startIndex + postsPerPage;
       const postsToShow = visiblePosts.slice(startIndex, endIndex);
@@ -542,35 +547,29 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         if (element) element.style.display = '';
       });
       
-      // Update pagination controls
       updatePagination(totalPages);
       
-      // Scroll to top of posts container
       const postsContainer = document.getElementById('posts-container');
       if (postsContainer) {
         postsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
     
-    // 监听标签过滤变化
     window.addEventListener('tag-filter-changed', ((e: CustomEvent) => {
       const tag = e.detail.tag === '' ? null : e.detail.tag;
       selectedTag = tag;
       updateFilters();
     }) as EventListener);
     
-    // Listen for search updates from Navbar
     window.addEventListener('search-updated', ((e: CustomEvent) => {
       searchQuery = e.detail.query;
       updateFilters();
     }) as EventListener);
     
-    // 发送初始标签过滤事件以确保状态同步
     window.dispatchEvent(new CustomEvent('tag-filter-changed', { 
       detail: { tag: '' } 
     }));
     
-    // Clear filters button
     const clearFiltersBtn = document.getElementById('clear-filters');
     if (clearFiltersBtn) {
       clearFiltersBtn.addEventListener('click', () => {
@@ -582,13 +581,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
       });
     }
     
-    // Listen for search from Navbar (via custom event)
-    window.addEventListener('search-updated', ((e: CustomEvent) => {
-      searchQuery = e.detail.query;
-      updateFilters();
-    }) as EventListener);
-    
-    // Initialize styles
     updateFilters();
   </script>
 </BaseLayout>
