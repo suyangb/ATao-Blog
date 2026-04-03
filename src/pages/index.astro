@@ -73,7 +73,7 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         <div class="text-center py-6 sm:py-8">
           <div id="search-header" class="hidden">
             <p class="text-slate-500 dark:text-slate-400 mb-2 text-sm font-medium uppercase tracking-widest">搜索结果</p>
-            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:white font-serif" id="search-query"></h1>
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white font-serif" id="search-query"></h1>
           </div>
           <div id="normal-header">
             <div class="relative w-full max-w-4xl mx-auto">
@@ -111,13 +111,13 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           </div>
         </div>
 
-        <!-- 社交图标 -->
-        <div class="flex items-center justify-center gap-5 my-2 text-slate-600 dark:text-slate-400">
+        <!-- 社交图标 - 靠左 + 抖音 -->
+        <div class="flex items-center justify-start gap-5 my-2 ml-14 sm:ml-16 text-slate-600 dark:text-slate-400">
           <a href="https://github.com/suyangb" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-black dark:hover:text-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
           </a>
-          <a href="https://bilibili.com/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-pink-500">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 9.5H17.5M16.5 12.5H17M12 20H7C5.89543 20 5 19.1046 5 18V6C5 4.89543 5.89543 4 7 4H17C18.1046 4 19 4.89543 19 6V12"></path><circle cx="10.5" cy="9.5" r="1.5"></circle><circle cx="13.5" cy="9.5" r="1.5"></circle><path d="M7.5 18.5C9.5 18.5 10.5 20 12 20C13.5 20 14.5 18.5 16.5 18.5"></path></svg>
+          <a href="https://www.douyin.com/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-slate-800 dark:hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a3 3 0 1 0 6 0 3 3 0 1 0 -6 0"></path><path d="M17.5 6.5h1.5v1.5"></path><path d="M17.5 9.5v1.5"></path><path d="M17 5a1 1 0 0 1 1 1"></path><path d="M17 12a5 5 0 1 1 -10 0 5 5 0 0 1 10 0z"></path></svg>
           </a>
           <a href="mailto:your@email.com" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-red-400">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -187,22 +187,17 @@ const postsPerPage = HOME_PAGE.postsPerPage;
 
   <script>
     // Search and filter state
-    // 优先从 sessionStorage 获取搜索内容（更快的恢复），其次从 URL 参数获取
     let initialSearchQuery = '';
     try {
-      // 尝试从 sessionStorage 获取
       const pendingQuery = sessionStorage.getItem('pendingSearchQuery');
       if (pendingQuery) {
         initialSearchQuery = pendingQuery;
-        // 清除 sessionStorage，避免下次加载时重复使用
         sessionStorage.removeItem('pendingSearchQuery');
       } else {
-        // 如果没有 sessionStorage，从 URL 参数获取
         const urlParams = new URLSearchParams(window.location.search);
         initialSearchQuery = urlParams.get('q') || '';
       }
     } catch (e) {
-      // sessionStorage 不可用，从 URL 参数获取
       const urlParams = new URLSearchParams(window.location.search);
       initialSearchQuery = urlParams.get('q') || '';
     }
@@ -213,7 +208,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
     const postsContainer = document.getElementById('posts-container');
     const postsPerPage = postsContainer ? parseInt(postsContainer.dataset.postsPerPage || '0') : 0;
     
-    // 如果 URL 中有搜索参数，自动打开搜索框并设置搜索内容
     if (initialSearchQuery) {
       const initSearch = () => {
         window.dispatchEvent(new CustomEvent('search-updated', {
@@ -356,10 +350,8 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           'hover:bg-slate-50', 'hover:border-docs-accent/50', 'hover:text-docs-accent',
           'dark:hover:bg-white/5', 'dark:hover:border-dark-accent/50', 'dark:hover:text-dark-accent'
         ];
-
         btn.classList.remove(...activeClasses);
         btn.classList.remove(...inactiveClasses);
-
         if (isActive) {
           btn.classList.add(...activeClasses);
         } else {
