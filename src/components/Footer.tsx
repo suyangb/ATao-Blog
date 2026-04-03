@@ -54,7 +54,7 @@ export default function Footer() {
         </a>
         <span className="text-slate-300 dark:text-slate-600">·</span>
         {/* 本站运行时间 */}
-        <span>已运行 {siteTime}</span>
+        <span>本站已运行 {siteTime}</span>
         <span className="text-slate-300 dark:text-slate-600">·</span>
         <a
           href="/rss.xml"
