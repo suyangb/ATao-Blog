@@ -1,6 +1,33 @@
+import { useEffect, useState } from 'react';
 import { ICP_INFO } from '../config';
 
 export default function Footer() {
+  const [siteTime, setSiteTime] = useState('');
+  // 假设访问量，实际可从接口/配置替换
+  const siteViews = '100,868';
+
+  // 计算网站运行时间
+  useEffect(() => {
+    // 这里改成你的网站上线日期
+    const launchDate = new Date('2024-01-01 00:00:00');
+
+    const updateTime = () => {
+      const now = new Date();
+      const diff = now - launchDate;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      setSiteTime(`${days}天${hours}时${minutes}分${seconds}秒`);
+    };
+
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <footer className="mt-auto pb-10 text-center text-xs text-slate-400 dark:text-slate-500">
       <div className="w-24 h-1 mx-auto bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent mb-8"></div>
@@ -27,6 +54,12 @@ export default function Footer() {
         >
           皖公网安备34162202003345号
         </a>
+        <span className="text-slate-300 dark:text-slate-600">·</span>
+        {/* 本站运行时间 */}
+        <span>已运行 {siteTime}</span>
+        <span className="text-slate-300 dark:text-slate-600">·</span>
+        {/* 访问量 */}
+        <span>访问量 {siteViews}</span>
         <span className="text-slate-300 dark:text-slate-600">·</span>
         <a
           href="/rss.xml"
