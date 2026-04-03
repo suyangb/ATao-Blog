@@ -190,359 +190,354 @@ const postsPerPage = HOME_PAGE.postsPerPage;
   </div>
 
   <script>
-    let initialSearchQuery = '';
-    try {
-      const pendingQuery = sessionStorage.getItem('pendingSearchQuery');
-      if (pendingQuery) {
-        initialSearchQuery = pendingQuery;
-        sessionStorage.removeItem('pendingSearchQuery');
-      } else {
+    // 修复：等待DOM完全加载后再执行所有脚本逻辑
+    document.addEventListener('DOMContentLoaded', () => {
+      let initialSearchQuery = '';
+      try {
+        const pendingQuery = sessionStorage.getItem('pendingSearchQuery');
+        if (pendingQuery) {
+          initialSearchQuery = pendingQuery;
+          sessionStorage.removeItem('pendingSearchQuery');
+        } else {
+          const urlParams = new URLSearchParams(window.location.search);
+          initialSearchQuery = urlParams.get('q') || '';
+        }
+      } catch (e) {
         const urlParams = new URLSearchParams(window.location.search);
         initialSearchQuery = urlParams.get('q') || '';
       }
-    } catch (e) {
-      const urlParams = new URLSearchParams(window.location.search);
-      initialSearchQuery = urlParams.get('q') || '';
-    }
-    
-    let searchQuery = initialSearchQuery;
-    let selectedTag = null;
-    let currentPage = 1;
-    const postsContainer = document.getElementById('posts-container');
-    const postsPerPage = postsContainer ? parseInt(postsContainer.dataset.postsPerPage || '0') : 0;
-    
-    if (initialSearchQuery) {
-      const initSearch = () => {
-        window.dispatchEvent(new CustomEvent('search-updated', {
-          detail: { query: initialSearchQuery }
-        }));
-        
-        setTimeout(() => {
-          const searchButton = document.querySelector('button[aria-label="Open search"]');
-          const searchInput = document.querySelector('input[type="text"]');
-          if (searchButton && !searchInput) {
-            searchButton.click();
-          }
-          if (searchInput && searchInput.value !== initialSearchQuery) {
-            searchInput.value = initialSearchQuery;
-          }
-        }, 100);
-      };
       
-      if (document.readyState !== 'loading') {
+      let searchQuery = initialSearchQuery;
+      let selectedTag = null;
+      let currentPage = 1;
+      const postsContainer = document.getElementById('posts-container');
+      const postsPerPage = postsContainer ? parseInt(postsContainer.dataset.postsPerPage || '0') : 0;
+      
+      if (initialSearchQuery) {
+        const initSearch = () => {
+          window.dispatchEvent(new CustomEvent('search-updated', {
+            detail: { query: initialSearchQuery }
+          }));
+          
+          setTimeout(() => {
+            const searchButton = document.querySelector('button[aria-label="Open search"]');
+            const searchInput = document.querySelector('input[type="text"]');
+            if (searchButton && !searchInput) {
+              searchButton.click();
+            }
+            if (searchInput && searchInput.value !== initialSearchQuery) {
+              searchInput.value = initialSearchQuery;
+            }
+          }, 100);
+        };
+        
         initSearch();
       }
       
-      document.addEventListener('DOMContentLoaded', () => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(initSearch);
+      function getPostsData() {
+        const postsData = [];
+        document.querySelectorAll('[data-post-card]').forEach(card => {
+          const id = card.dataset.postId || '';
+          const title = card.dataset.title || '';
+          const tags = card.dataset.tags?.split(' ') || [];
+          const content = card.dataset.content || '';
+          postsData.push({ id, title, tags, content, element: card });
         });
-      });
-    }
-    
-    function getPostsData() {
-      const postsData = [];
-      document.querySelectorAll('[data-post-card]').forEach(card => {
-        const id = card.dataset.postId || '';
-        const title = card.dataset.title || '';
-        const tags = card.dataset.tags?.split(' ') || [];
-        const content = card.dataset.content || '';
-        postsData.push({ id, title, tags, content, element: card });
-      });
-      return postsData;
-    }
-    
-    function updateFilters() {
-      const query = searchQuery.toLowerCase().trim();
-      const tag = selectedTag;
-      
-      currentPage = 1;
-      
-      const searchHeader = document.getElementById('search-header');
-      const normalHeader = document.getElementById('normal-header');
-      const searchQueryEl = document.getElementById('search-query');
-      
-      if (query) {
-        searchHeader.classList.remove('hidden');
-        normalHeader.classList.add('hidden');
-        searchQueryEl.textContent = `"${query}"`;
-      } else {
-        searchHeader.classList.add('hidden');
-        normalHeader.classList.remove('hidden');
+        return postsData;
       }
       
-      const postsData = getPostsData();
-      const visiblePosts = [];
+      function updateFilters() {
+        const query = searchQuery.toLowerCase().trim();
+        const tag = selectedTag;
+        
+        currentPage = 1;
+        
+        const searchHeader = document.getElementById('search-header');
+        const normalHeader = document.getElementById('normal-header');
+        const searchQueryEl = document.getElementById('search-query');
+        
+        if (query) {
+          searchHeader.classList.remove('hidden');
+          normalHeader.classList.add('hidden');
+          searchQueryEl.textContent = `"${query}"`;
+        } else {
+          searchHeader.classList.add('hidden');
+          normalHeader.classList.remove('hidden');
+        }
+        
+        const postsData = getPostsData();
+        const visiblePosts = [];
+        
+        postsData.forEach(({ title, tags, content, element }) => {
+          const matchesSearch = !query || 
+            title.toLowerCase().includes(query) || 
+            tags.some(t => t.toLowerCase().includes(query)) ||
+            content.toLowerCase().includes(query);
+          
+          const matchesTag = !tag || tags.includes(tag);
+          
+          const matches = matchesSearch && matchesTag;
+          
+          if (element) {
+            if (matches) {
+              visiblePosts.push({ title, tags, element });
+            }
+            element.style.display = 'none';
+          }
+        });
+        
+        const visibleCount = visiblePosts.length;
+        
+        if (postsPerPage > 0 && visibleCount > 0) {
+          const totalPages = Math.ceil(visibleCount / postsPerPage);
+          const startIndex = (currentPage - 1) * postsPerPage;
+          const endIndex = startIndex + postsPerPage;
+          const postsToShow = visiblePosts.slice(startIndex, endIndex);
+          
+          postsToShow.forEach(({ element }, index) => {
+            element.style.display = '';
+            // 文章卡片逐行出现动画
+            element.style.animationDelay = `${index * 100}ms`;
+            element.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-2');
+          });
+          
+          updatePagination(totalPages);
+        } else {
+          visiblePosts.forEach(({ element }) => {
+            element.style.display = '';
+          });
+          
+          const pagination = document.getElementById('pagination');
+          if (pagination) pagination.classList.add('hidden');
+        }
+        
+        const noResults = document.getElementById('no-results');
+        const noResultsMessage = document.getElementById('no-results-message');
+        const postsContainer = document.getElementById('posts-container');
+        
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+          postsContainer.classList.add('hidden');
+          const pagination = document.getElementById('pagination');
+          if (pagination) pagination.classList.add('hidden');
+          if (query && tag) {
+            noResultsMessage.textContent = `没有找到同时包含 "${query}" 且带有标签 "${tag}" 的文章。`;
+          } else if (query) {
+            noResultsMessage.textContent = `没有找到包含 "${query}" 的文章。`;
+          } else if (tag) {
+            noResultsMessage.textContent = `没有找到带有标签 "${tag}" 的文章。`;
+          }
+        } else {
+          noResults.classList.add('hidden');
+          postsContainer.classList.remove('hidden');
+        }
+        
+        document.querySelectorAll('[data-tag-filter]').forEach(btn => {
+          const btnTag = btn.dataset.tagFilter || null;
+          const isAllBtn = btnTag === '';
+          const isActive = (selectedTag === null && isAllBtn) || (selectedTag === btnTag);
+          
+          const activeClasses = [
+            'bg-slate-800', 'text-white', 'border-slate-800',
+            'dark:bg-white', 'dark:text-slate-900', 'dark:border-white',
+            'shadow-md', 'hover:bg-slate-900', 'hover:text-white', 'hover:border-slate-900',
+            'dark:hover:bg-slate-100', 'dark:hover:text-slate-900', 'dark:hover:border-white'
+          ];
+          
+          const inactiveClasses = [
+            'bg-transparent', 'text-slate-600', 'border-slate-200',
+            'dark:text-slate-400', 'dark:border-white/10',
+            'hover:bg-slate-50', 'hover:border-docs-accent/50', 'hover:text-docs-accent',
+            'dark:hover:bg-white/5', 'dark:hover:border-dark-accent/50', 'dark:hover:text-dark-accent'
+          ];
+          btn.classList.remove(...activeClasses);
+          btn.classList.remove(...inactiveClasses);
+          if (isActive) {
+            btn.classList.add(...activeClasses);
+          } else {
+            btn.classList.add(...inactiveClasses);
+          }
+        });
+      }
       
-      postsData.forEach(({ title, tags, content, element }) => {
-        const matchesSearch = !query || 
-          title.toLowerCase().includes(query) || 
-          tags.some(t => t.toLowerCase().includes(query)) ||
-          content.toLowerCase().includes(query);
+      function updatePagination(totalPages) {
+        const pagination = document.getElementById('pagination');
         
-        const matchesTag = !tag || tags.includes(tag);
+        if (!pagination) return;
         
-        const matches = matchesSearch && matchesTag;
+        if (totalPages > 1) {
+          pagination.classList.remove('hidden');
+        } else {
+          pagination.classList.add('hidden');
+          return;
+        }
         
-        if (element) {
-          if (matches) {
+        pagination.innerHTML = '';
+        
+        const createPageButton = (pageNum, isActive = false, isEllipsis = false) => {
+          const button = document.createElement('button');
+          
+          if (isEllipsis) {
+            button.textContent = '…';
+            button.disabled = true;
+            button.className = 'w-9 h-9 flex items-center justify-center text-sm font-medium text-slate-400 dark:text-slate-500 cursor-default';
+          } else {
+            button.textContent = pageNum.toString();
+            button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 relative overflow-hidden group ${
+              isActive
+                ? 'bg-docs-accent text-white dark:bg-dark-accent shadow-md shadow-docs-accent/20 scale-100 font-bold'
+                : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-white/5 border border-transparent hover:border-docs-accent hover:text-docs-accent hover:bg-docs-accent/5 dark:hover:border-dark-accent dark:hover:text-dark-accent dark:hover:bg-dark-accent/10'
+            }`;
+            
+            if (!isActive) {
+              button.addEventListener('click', () => {
+                goToPage(pageNum);
+              });
+            }
+          }
+          
+          return button;
+        };
+        
+        const createArrowButton = (direction, disabled) => {
+          const button = document.createElement('button');
+          button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 ${
+            disabled
+              ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed bg-transparent'
+              : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-white/5 border border-transparent hover:border-docs-accent hover:text-docs-accent hover:bg-docs-accent/5 dark:hover:border-dark-accent dark:hover:text-dark-accent dark:hover:bg-dark-accent/10'
+          }`;
+          button.disabled = disabled;
+          
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('width', '16');
+          svg.setAttribute('height', '16');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('fill', 'none');
+          svg.setAttribute('stroke', 'currentColor');
+          svg.setAttribute('stroke-width', '2');
+          svg.setAttribute('stroke-linecap', 'round');
+          svg.setAttribute('stroke-linejoin', 'round');
+          
+          const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+          polyline.setAttribute('points', direction === 'prev' ? '15 18 9 12 15 6' : '9 18 15 12 9 6');
+          
+          svg.appendChild(polyline);
+          button.appendChild(svg);
+          
+          if (!disabled) {
+            button.addEventListener('click', () => {
+              goToPage(direction === 'prev' ? currentPage - 1 : currentPage + 1);
+            });
+          }
+          
+          return button;
+        };
+        
+        const pageNumbers = [];
+        
+        if (totalPages <= 7) {
+          for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(i);
+          }
+        } else {
+          pageNumbers.push(1);
+          
+          if (currentPage <= 3) {
+            pageNumbers.push(2, 3, 4, 'ellipsis', totalPages);
+          } else if (currentPage >= totalPages - 2) {
+            pageNumbers.push('ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+          } else {
+            pageNumbers.push('ellipsis', currentPage - 1, currentPage, currentPage + 1, 'ellipsis', totalPages);
+          }
+        }
+        
+        pagination.appendChild(createArrowButton('prev', currentPage === 1));
+        
+        pageNumbers.forEach((pageNum) => {
+          if (pageNum === 'ellipsis') {
+            pagination.appendChild(createPageButton(0, false, true));
+          } else {
+            pagination.appendChild(createPageButton(pageNum, pageNum === currentPage));
+          }
+        });
+        
+        pagination.appendChild(createArrowButton('next', currentPage === totalPages));
+      }
+      
+      function goToPage(page) {
+        const query = searchQuery.toLowerCase().trim();
+        const tag = selectedTag;
+        const postsData = getPostsData();
+        const visiblePosts = [];
+        
+        postsData.forEach(({ title, tags, content, element }) => {
+          const matchesSearch = !query || 
+            title.toLowerCase().includes(query) || 
+            tags.some(t => t.toLowerCase().includes(query)) ||
+            content.toLowerCase().includes(query);
+          
+          const matchesTag = !tag || tags.includes(tag);
+          
+          if (element && matches) {
             visiblePosts.push({ title, tags, element });
           }
-          element.style.display = 'none';
-        }
-      });
-      
-      const visibleCount = visiblePosts.length;
-      
-      if (postsPerPage > 0 && visibleCount > 0) {
-        const totalPages = Math.ceil(visibleCount / postsPerPage);
+        });
+        
+        const totalPages = Math.ceil(visiblePosts.length / postsPerPage);
+        if (page < 1 || page > totalPages) return;
+        
+        currentPage = page;
+        
+        postsData.forEach(({ element }) => {
+          if (element) element.style.display = 'none';
+        });
+        
         const startIndex = (currentPage - 1) * postsPerPage;
         const endIndex = startIndex + postsPerPage;
         const postsToShow = visiblePosts.slice(startIndex, endIndex);
         
         postsToShow.forEach(({ element }, index) => {
           element.style.display = '';
-          // 文章卡片逐行出现动画
-          element.style.animationDelay = `${index * 100}ms`;
+          // 翻页时也有逐行动画
+          element.style.animationDelay = `${index * 80}ms`;
           element.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-2');
         });
         
         updatePagination(totalPages);
-      } else {
-        visiblePosts.forEach(({ element }) => {
-          element.style.display = '';
-        });
         
-        const pagination = document.getElementById('pagination');
-        if (pagination) pagination.classList.add('hidden');
-      }
-      
-      const noResults = document.getElementById('no-results');
-      const noResultsMessage = document.getElementById('no-results-message');
-      const postsContainer = document.getElementById('posts-container');
-      
-      if (visibleCount === 0) {
-        noResults.classList.remove('hidden');
-        postsContainer.classList.add('hidden');
-        const pagination = document.getElementById('pagination');
-        if (pagination) pagination.classList.add('hidden');
-        if (query && tag) {
-          noResultsMessage.textContent = `没有找到同时包含 "${query}" 且带有标签 "${tag}" 的文章。`;
-        } else if (query) {
-          noResultsMessage.textContent = `没有找到包含 "${query}" 的文章。`;
-        } else if (tag) {
-          noResultsMessage.textContent = `没有找到带有标签 "${tag}" 的文章。`;
-        }
-      } else {
-        noResults.classList.add('hidden');
-        postsContainer.classList.remove('hidden');
-      }
-      
-      document.querySelectorAll('[data-tag-filter]').forEach(btn => {
-        const btnTag = btn.dataset.tagFilter || null;
-        const isAllBtn = btnTag === '';
-        const isActive = (selectedTag === null && isAllBtn) || (selectedTag === btnTag);
-        
-        const activeClasses = [
-          'bg-slate-800', 'text-white', 'border-slate-800',
-          'dark:bg-white', 'dark:text-slate-900', 'dark:border-white',
-          'shadow-md', 'hover:bg-slate-900', 'hover:text-white', 'hover:border-slate-900',
-          'dark:hover:bg-slate-100', 'dark:hover:text-slate-900', 'dark:hover:border-white'
-        ];
-        
-        const inactiveClasses = [
-          'bg-transparent', 'text-slate-600', 'border-slate-200',
-          'dark:text-slate-400', 'dark:border-white/10',
-          'hover:bg-slate-50', 'hover:border-docs-accent/50', 'hover:text-docs-accent',
-          'dark:hover:bg-white/5', 'dark:hover:border-dark-accent/50', 'dark:hover:text-dark-accent'
-        ];
-        btn.classList.remove(...activeClasses);
-        btn.classList.remove(...inactiveClasses);
-        if (isActive) {
-          btn.classList.add(...activeClasses);
-        } else {
-          btn.classList.add(...inactiveClasses);
-        }
-      });
-    }
-    
-    function updatePagination(totalPages) {
-      const pagination = document.getElementById('pagination');
-      
-      if (!pagination) return;
-      
-      if (totalPages > 1) {
-        pagination.classList.remove('hidden');
-      } else {
-        pagination.classList.add('hidden');
-        return;
-      }
-      
-      pagination.innerHTML = '';
-      
-      const createPageButton = (pageNum, isActive = false, isEllipsis = false) => {
-        const button = document.createElement('button');
-        
-        if (isEllipsis) {
-          button.textContent = '…';
-          button.disabled = true;
-          button.className = 'w-9 h-9 flex items-center justify-center text-sm font-medium text-slate-400 dark:text-slate-500 cursor-default';
-        } else {
-          button.textContent = pageNum.toString();
-          button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 relative overflow-hidden group ${
-            isActive
-              ? 'bg-docs-accent text-white dark:bg-dark-accent shadow-md shadow-docs-accent/20 scale-100 font-bold'
-              : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-white/5 border border-transparent hover:border-docs-accent hover:text-docs-accent hover:bg-docs-accent/5 dark:hover:border-dark-accent dark:hover:text-dark-accent dark:hover:bg-dark-accent/10'
-          }`;
-          
-          if (!isActive) {
-            button.addEventListener('click', () => {
-              goToPage(pageNum);
-            });
-          }
-        }
-        
-        return button;
-      };
-      
-      const createArrowButton = (direction, disabled) => {
-        const button = document.createElement('button');
-        button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 ${
-          disabled
-            ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed bg-transparent'
-            : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-white/5 border border-transparent hover:border-docs-accent hover:text-docs-accent hover:bg-docs-accent/5 dark:hover:border-dark-accent dark:hover:text-dark-accent dark:hover:bg-dark-accent/10'
-        }`;
-        button.disabled = disabled;
-        
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '16');
-        svg.setAttribute('height', '16');
-        svg.setAttribute('viewBox', '0 0 24 24');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('stroke', 'currentColor');
-        svg.setAttribute('stroke-width', '2');
-        svg.setAttribute('stroke-linecap', 'round');
-        svg.setAttribute('stroke-linejoin', 'round');
-        
-        const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-        polyline.setAttribute('points', direction === 'prev' ? '15 18 9 12 15 6' : '9 18 15 12 9 6');
-        
-        svg.appendChild(polyline);
-        button.appendChild(svg);
-        
-        if (!disabled) {
-          button.addEventListener('click', () => {
-            goToPage(direction === 'prev' ? currentPage - 1 : currentPage + 1);
-          });
-        }
-        
-        return button;
-      };
-      
-      const pageNumbers = [];
-      
-      if (totalPages <= 7) {
-        for (let i = 1; i <= totalPages; i++) {
-          pageNumbers.push(i);
-        }
-      } else {
-        pageNumbers.push(1);
-        
-        if (currentPage <= 3) {
-          pageNumbers.push(2, 3, 4, 'ellipsis', totalPages);
-        } else if (currentPage >= totalPages - 2) {
-          pageNumbers.push('ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-        } else {
-          pageNumbers.push('ellipsis', currentPage - 1, currentPage, currentPage + 1, 'ellipsis', totalPages);
+        const postsContainer = document.getElementById('posts-container');
+        if (postsContainer) {
+          postsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }
       
-      pagination.appendChild(createArrowButton('prev', currentPage === 1));
-      
-      pageNumbers.forEach((pageNum) => {
-        if (pageNum === 'ellipsis') {
-          pagination.appendChild(createPageButton(0, false, true));
-        } else {
-          pagination.appendChild(createPageButton(pageNum, pageNum === currentPage));
-        }
-      });
-      
-      pagination.appendChild(createArrowButton('next', currentPage === totalPages));
-    }
-    
-    function goToPage(page) {
-      const query = searchQuery.toLowerCase().trim();
-      const tag = selectedTag;
-      const postsData = getPostsData();
-      const visiblePosts = [];
-      
-      postsData.forEach(({ title, tags, content, element }) => {
-        const matchesSearch = !query || 
-          title.toLowerCase().includes(query) || 
-          tags.some(t => t.toLowerCase().includes(query)) ||
-          content.toLowerCase().includes(query);
-        
-        const matchesTag = !tag || tags.includes(tag);
-        
-        if (element && matches) {
-          visiblePosts.push({ title, tags, element });
-        }
-      });
-      
-      const totalPages = Math.ceil(visiblePosts.length / postsPerPage);
-      if (page < 1 || page > totalPages) return;
-      
-      currentPage = page;
-      
-      postsData.forEach(({ element }) => {
-        if (element) element.style.display = 'none';
-      });
-      
-      const startIndex = (currentPage - 1) * postsPerPage;
-      const endIndex = startIndex + postsPerPage;
-      const postsToShow = visiblePosts.slice(startIndex, endIndex);
-      
-      postsToShow.forEach(({ element }, index) => {
-        element.style.display = '';
-        // 翻页时也有逐行动画
-        element.style.animationDelay = `${index * 80}ms`;
-        element.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-2');
-      });
-      
-      updatePagination(totalPages);
-      
-      const postsContainer = document.getElementById('posts-container');
-      if (postsContainer) {
-        postsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-    
-    window.addEventListener('tag-filter-changed', (e) => {
-      const tag = e.detail.tag === '' ? null : e.detail.tag;
-      selectedTag = tag;
-      updateFilters();
-    });
-    
-    window.addEventListener('search-updated', (e) => {
-      searchQuery = e.detail.query;
-      updateFilters();
-    });
-    
-    window.dispatchEvent(new CustomEvent('tag-filter-changed', { 
-      detail: { tag: '' } 
-    }));
-    
-    const clearFiltersBtn = document.getElementById('clear-filters');
-    if (clearFiltersBtn) {
-      clearFiltersBtn.addEventListener('click', () => {
-        searchQuery = '';
-        selectedTag = null;
-        const searchInput = document.querySelector('input[type="text"]');
-        if (searchInput) searchInput.value = '';
+      window.addEventListener('tag-filter-changed', (e) => {
+        const tag = e.detail.tag === '' ? null : e.detail.tag;
+        selectedTag = tag;
         updateFilters();
       });
-    }
-    
-    updateFilters();
+      
+      window.addEventListener('search-updated', (e) => {
+        searchQuery = e.detail.query;
+        updateFilters();
+      });
+      
+      const clearFiltersBtn = document.getElementById('clear-filters');
+      if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+          searchQuery = '';
+          selectedTag = null;
+          const searchInput = document.querySelector('input[type="text"]');
+          if (searchInput) searchInput.value = '';
+          updateFilters();
+        });
+      }
+      
+      // 初始化
+      updateFilters();
+      window.dispatchEvent(new CustomEvent('tag-filter-changed', { 
+        detail: { tag: '' } 
+      }));
+    });
   </script>
 </BaseLayout>
