@@ -10,7 +10,7 @@ import ProgressBar from '../../components/ProgressBar';
 import TableOfContents from '../../components/TableOfContents';
 import ScrollToTop from '../../components/ScrollToTop';
 import Comment from '../../components/Comment';
-import { ArrowLeft, ArrowRight, Calendar, Clock, ThumbsUp, Coffee } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, Clock, Coffee } from 'lucide-react';
 import { calculateReadingTime } from '../../utils/readingTime';
 import { generateShortId } from '../../utils/slug';
 import { FEATURES } from '../../config';
@@ -92,7 +92,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
               </div>
 
               <!-- 标题mb-4 → mb-3，进一步压缩标题到摘要间距 -->
-              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:white font-serif leading-tight mb-3 w-full animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
+              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-3 w-full animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
                 {post.data.title}
                 <div class="absolute -bottom-1 left-0 w-24 h-1 bg-docs-accent/30 rounded-full"></div>
               </h1>
@@ -119,33 +119,26 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 
           <MarkdownRenderer client:load content={post.body} />
 
-          <!-- 点赞 + 打赏 按钮区域 -->
-          <div class="mt-10 flex items-center justify-center gap-4">
-            <button id="likeBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-docs-accent hover:text-white dark:hover:bg-dark-accent transition-all duration-300">
-              <ThumbsUp size={18} id="likeIcon" />
-              <span id="likeText">点赞</span>
-            </button>
-            <button id="rewardBtn" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-600 transition-all duration-300">
-              <Coffee size={18} />
+          <!-- 缩小版打赏按钮 -->
+          <div class="mt-8 flex justify-center">
+            <button id="rewardBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-600 transition-all duration-300">
+              <Coffee size={16} />
               <span>打赏</span>
             </button>
           </div>
 
-          <!-- 打赏弹窗 -->
-          <div id="rewardModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-            <div class="w-full max-w-xs mx-4 bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 transform scale-95 transition-transform duration-300">
-              <div class="text-center mb-4">
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white">请作者喝杯咖啡</h3>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">感谢您的支持</p>
+          <!-- 弹窗：靠近按钮弹出 -->
+          <div id="rewardModal" class="hidden absolute z-50">
+            <div class="w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 relative">
+              <div class="text-center mb-3">
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">请作者喝杯咖啡</h3>
               </div>
-              <div class="flex justify-center mb-4">
-                <img src="https://qrcode.show/wechat" alt="赞赏码" class="w-48 h-48 rounded-lg object-cover" />
+              <div class="flex justify-center mb-2">
+                <img src="https://www.wsyblog.cn/IMG_8745.jpeg" alt="赞赏码" class="w-36 h-36 rounded object-cover" />
               </div>
-              <div class="text-center">
-                <button id="closeReward" class="px-4 py-2 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
-                  关闭
-                </button>
-              </div>
+              <button id="closeReward" class="absolute top-1 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                ✕
+              </button>
             </div>
           </div>
 
@@ -200,45 +193,27 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
   </div>
 
   <script>
-    // 点赞功能
-    const likeBtn = document.getElementById('likeBtn');
-    const likeIcon = document.getElementById('likeIcon');
-    const likeText = document.getElementById('likeText');
-    let liked = false;
-
-    likeBtn?.addEventListener('click', () => {
-      liked = !liked;
-      if (liked) {
-        likeBtn.classList.add('bg-docs-accent', 'text-white', 'dark:bg-dark-accent');
-        likeIcon.classList.add('fa-beat');
-        likeText.textContent = '已点赞';
-      } else {
-        likeBtn.classList.remove('bg-docs-accent', 'text-white', 'dark:bg-dark-accent');
-        likeIcon.classList.remove('fa-beat');
-        likeText.textContent = '点赞';
-      }
-    });
-
-    // 打赏弹窗
-    const rewardModal = document.getElementById('rewardModal');
     const rewardBtn = document.getElementById('rewardBtn');
+    const rewardModal = document.getElementById('rewardModal');
     const closeReward = document.getElementById('closeReward');
 
-    rewardBtn?.addEventListener('click', () => {
-      rewardModal.classList.remove('opacity-0', 'pointer-events-none');
-      rewardModal.querySelector('div').classList.remove('scale-95');
-      rewardModal.querySelector('div').classList.add('scale-100');
+    // 打开弹窗，定位在按钮上方居中
+    rewardBtn.addEventListener('click', () => {
+      const rect = rewardBtn.getBoundingClientRect();
+      rewardModal.style.display = 'block';
+      rewardModal.style.left = rect.left + rect.width / 2 - rewardModal.offsetWidth / 2 + 'px';
+      rewardModal.style.top = rect.top - rewardModal.offsetHeight - 10 + 'px';
     });
 
-    closeReward?.addEventListener('click', () => {
-      rewardModal.classList.add('opacity-0', 'pointer-events-none');
-      rewardModal.querySelector('div').classList.remove('scale-100');
-      rewardModal.querySelector('div').classList.add('scale-95');
+    // 关闭
+    closeReward.addEventListener('click', () => {
+      rewardModal.style.display = 'none';
     });
 
-    rewardModal?.addEventListener('click', (e) => {
-      if (e.target === rewardModal) {
-        closeReward.click();
+    // 点击外部关闭
+    document.addEventListener('click', (e) => {
+      if (!rewardBtn.contains(e.target) && !rewardModal.contains(e.target)) {
+        rewardModal.style.display = 'none';
       }
     });
   </script>
