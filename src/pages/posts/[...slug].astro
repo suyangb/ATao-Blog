@@ -120,25 +120,25 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
           <MarkdownRenderer client:load content={post.body} />
 
           <!-- 缩小版打赏按钮 -->
-          <div class="mt-8 flex justify-center">
+          <div class="mt-8 flex justify-center relative">
             <button id="rewardBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-600 transition-all duration-300">
               <Coffee size={16} />
               <span>打赏</span>
             </button>
-          </div>
 
-          <!-- 弹窗：靠近按钮弹出 -->
-          <div id="rewardModal" class="hidden absolute z-50">
-            <div class="w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 relative">
-              <div class="text-center mb-3">
-                <h3 class="text-sm font-bold text-slate-900 dark:text-white">请作者喝杯咖啡</h3>
+            <!-- 打赏弹窗 -->
+            <div id="rewardModal" class="hidden absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50">
+              <div class="w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4">
+                <div class="text-center mb-3">
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white">请作者喝杯咖啡</h3>
+                </div>
+                <div class="flex justify-center mb-2">
+                  <img src="https://qrcode.show/wechat" alt="赞赏码" class="w-36 h-36 rounded object-cover" />
+                </div>
+                <button id="closeReward" class="absolute top-2 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                  ✕
+                </button>
               </div>
-              <div class="flex justify-center mb-2">
-                <img src="https://www.wsyblog.cn/IMG_8745.jpeg" alt="赞赏码" class="w-36 h-36 rounded object-cover" />
-              </div>
-              <button id="closeReward" class="absolute top-1 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                ✕
-              </button>
             </div>
           </div>
 
@@ -155,7 +155,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
                       href={`/posts/${prevPostId}`}
                       class="group w-full text-left p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
                     >
-                      <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:hover:text-dark-accent">
+                      <div class="items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:hover:text-dark-accent">
                         <ArrowLeft size={14} /> 上一篇
                       </div>
                       <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:hover:text-dark-accent">
@@ -193,28 +193,27 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
   </div>
 
   <script>
-    const rewardBtn = document.getElementById('rewardBtn');
-    const rewardModal = document.getElementById('rewardModal');
-    const closeReward = document.getElementById('closeReward');
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('rewardBtn');
+      const modal = document.getElementById('rewardModal');
+      const close = document.getElementById('closeReward');
 
-    // 打开弹窗，定位在按钮上方居中
-    rewardBtn.addEventListener('click', () => {
-      const rect = rewardBtn.getBoundingClientRect();
-      rewardModal.style.display = 'block';
-      rewardModal.style.left = rect.left + rect.width / 2 - rewardModal.offsetWidth / 2 + 'px';
-      rewardModal.style.top = rect.top - rewardModal.offsetHeight - 10 + 'px';
-    });
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modal.classList.toggle('hidden');
+      });
 
-    // 关闭
-    closeReward.addEventListener('click', () => {
-      rewardModal.style.display = 'none';
-    });
+      close.addEventListener('click', () => {
+        modal.classList.add('hidden');
+      });
 
-    // 点击外部关闭
-    document.addEventListener('click', (e) => {
-      if (!rewardBtn.contains(e.target) && !rewardModal.contains(e.target)) {
-        rewardModal.style.display = 'none';
-      }
+      document.addEventListener('click', () => {
+        modal.classList.add('hidden');
+      });
+
+      modal.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
     });
   </script>
 </BaseLayout>
