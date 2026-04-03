@@ -9,15 +9,15 @@ export const SITE_DESCRIPTION = "一个爱折腾的普通人";
 // ============================================
 export const HOME_PAGE = {
   // 诗句或名言
-  verse: "会当凌绝顶，\n一览众山小。",
+  verse: "路漫漫其修远兮，\n吾将上下而求索。",
   // 出处
-  source: "杜甫",
+  source: "屈原《离骚》",
   // 是否显示粒子背景
   showParticles: true,
   // 是否显示标签筛选
   showTagFilters: true,
   // 每页显示的文章数量（0 表示显示全部）
-  postsPerPage: 8,
+  postsPerPage: 5,
 };
 
 // ============================================
@@ -32,7 +32,6 @@ export const NAVBAR = {
     { label: '开往', href: 'https://www.travellings.cn/go.html', target: '_blank' },
     { label: '关于', href: '/about' },
   ],
-};
   // Logo 文字（如果为空则只显示图标）
   logoText: "王苏洋Blog",
   // Logo 图标文字（单个字符）
@@ -138,7 +137,7 @@ export const LICENSE_CONFIG = {
   // 许可协议文本
   text: "本博客所有文章除特别声明外，均采用 CC BY-NC-SA 4.0 许可协议, 转载请注明出处。",
   // 是否显示原创徽章
-  showOriginalBadge: false,
+  showOriginalBadge: true,
 };
 
 // ============================================
@@ -182,7 +181,7 @@ export const FRIEND_LINK_CONTACT = {
   // 本站名称
   name: '王苏洋Blog',
   // 本站地址
-  url: 'https://wsyblog.cn',
+  url: 'https://www.wsyblog.cn/',
   // 本站描述
   description: '一个爱折腾的普通人',
   // 本站头像
