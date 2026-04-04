@@ -10,7 +10,7 @@ import ProgressBar from '../../components/ProgressBar';
 import TableOfContents from '../../components/TableOfContents';
 import ScrollToTop from '../../components/ScrollToTop';
 import Comment from '../../components/Comment';
-import { ArrowLeft, ArrowRight, Calendar, Clock } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { calculateReadingTime } from '../../utils/readingTime';
 import { generateShortId } from '../../utils/slug';
 import { FEATURES } from '../../config';
@@ -18,6 +18,7 @@ import { FEATURES } from '../../config';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => {
+    // 使用文件路径生成短随机ID
     const shortId = generateShortId(post.id);
     return {
       params: { slug: shortId },
@@ -31,20 +32,21 @@ const allPosts = await getCollection('blog');
 const sortedPosts = allPosts.sort((a, b) => {
   const dateA = new Date(a.data.date.replace(/年|月|日/g, '/'));
   const dateB = new Date(b.data.date.replace(/年|月|日/g, '/'));
-  return dateB.getTime() - dateB.getTime();
+  return dateB.getTime() - dateA.getTime();
 });
 
 const currentIndex = sortedPosts.findIndex(p => generateShortId(p.id) === shortId);
 const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
 const nextPost = currentIndex !== -1 && currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 
+// 为前后文章生成短ID
 const prevPostId = prevPost ? generateShortId(prevPost.id) : null;
 const nextPostId = nextPost ? generateShortId(nextPost.id) : null;
 
 const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 ---
 
-<BaseLayout title={`${post.data.title} | 王苏洋Blog`}>
+<BaseLayout title={`${post.data.title} | ${post.data.title}`}>
   <div class="min-h-screen relative flex flex-col">
     {FEATURES.readingProgress && <ProgressBar client:load />}
     {FEATURES.tableOfContents && <TableOfContents client:load />}
@@ -58,11 +60,11 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
       setSearchQuery={() => {}}
     />
 
-    <main class="flex-1 flex flex-col relative w-full max-w-[98%] mx-auto px-1 sm:px-2 pt-20 sm:pt-24 z-10 overflow-x-hidden">
-      <div class="animate-in fade-in slide-in-from-bottom-8 duration-500 w-full">
+    <main class="flex-1 flex flex-col relative w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 z-10 overflow-x-hidden">
+      <div class="animate-in fade-in slide-in-from-bottom-8 duration-500">
         <a 
           href="/"
-          class="group mb-4 flex items-center gap-2 text-slate-500 hover:text-docs-accent dark:text-slate-400 dark:hover:text-dark-accent transition-colors"
+          class="group mb-8 flex items-center gap-2 text-slate-500 hover:text-docs-accent dark:text-slate-400 dark:hover:text-dark-accent transition-colors"
         >
           <div class="p-2 rounded-full bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/5 group-hover:-translate-x-1 transition-transform">
             <ArrowLeft size={18} />
@@ -70,10 +72,12 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
           <span class="text-sm font-medium">返回列表</span>
         </a>
 
-        <article class="w-full max-w-none bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-6 sm:p-8" style="contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
-          <header class="relative mb-6 py-2 sm:py-3 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
+        <article class="bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-8 sm:p-12 md:p-16" style="will-change: scroll-position; contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
+          <header class="relative mb-12 py-10 sm:py-14 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
+            {/* Background Decoration */}
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-docs-accent/5 to-transparent opacity-0 dark:opacity-20 pointer-events-none rounded-full blur-3xl"></div>
             
+            {/* Decorative Watermark */}
             <div class="absolute top-0 right-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none rotate-12 scale-150">
                <svg width="200" height="200" viewBox="0 0 100 100" fill="currentColor">
                 <path d="M50 0L61 39L100 50L61 61L50 100L39 61L0 50L39 39L50 0Z" />
@@ -81,7 +85,8 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
             </div>
 
             <div class="relative z-10 flex flex-col items-start">
-              <div class="flex flex-wrap justify-start gap-2 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {/* Tags */}
+              <div class="flex flex-wrap justify-start gap-2 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {post.data.tags.map(tag => (
                   <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
                     #{tag}
@@ -89,26 +94,30 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
                 ))}
               </div>
 
-              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-3 w-full animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
+              {/* Title */}
+              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-6 max-w-4xl animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
                 {post.data.title}
-                <div class="absolute -bottom-1 left-0 w-24 h-1 bg-docs-accent/30 rounded-full"></div>
+                {/* Underline Decoration */}
+                <div class="absolute -bottom-4 left-0 w-24 h-1 bg-docs-accent/30 rounded-full"></div>
               </h1>
 
+              {/* Summary */}
               {post.data.summary && (
-                <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 w-full leading-relaxed mb-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+                <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
                   {post.data.summary}
                 </p>
               )}
 
+              {/* Metadata */}
               <div class="flex items-center gap-6 text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
                 <div class="flex items-center gap-2">
-                  <Calendar size={14} class="text-docs-accent" />
+                  <div class="w-1.5 h-1.5 rounded-sm bg-docs-accent rotate-45"></div>
                   <span>{post.data.date}</span>
                 </div>
                 <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
                 <div class="flex items-center gap-2">
-                  <Clock size={14} class="text-docs-accent" />
                   <span>{readingTime}</span>
+                  <div class="w-1.5 h-1.5 rounded-sm bg-docs-accent rotate-45"></div>
                 </div>
               </div>
             </div>
@@ -116,50 +125,45 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 
           <MarkdownRenderer client:load content={post.body} />
 
-          <!-- THE END -->
-          <div class="mt-12 mb-12 flex items-center justify-center gap-4">
-            <div class="w-20 h-[1.5px] bg-slate-300 dark:bg-slate-600"></div>
-            <span class="text-xs font-serif text-slate-500 dark:text-slate-400 tracking-widest">THE END</span>
-            <div class="w-20 h-[1.5px] bg-slate-300 dark:bg-slate-600"></div>
-          </div>
-
-          <div class="mt-10 pt-10 border-t-2 border-slate-200 dark:border-slate-700">
+          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
             <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
           </div>
           
-          {(prevPost || nextPost) && (
-            <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+          <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+              <div class="flex justify-start">
                 {prevPost && prevPostId ? (
-                  <div class="flex justify-start">
-                    <a href={`/posts/${prevPostId}`}
-                      class="group w-full text-left p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5">
-                      <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold">
-                        <ArrowLeft size={14} /> 上一篇
-                      </div>
-                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2">
-                        {prevPost.data.title}
-                      </div>
-                    </a>
-                  </div>
+                  <a
+                    href={`/posts/${prevPostId}`}
+                    class="group w-full text-left p-4 -ml-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
+                  >
+                    <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                      <ArrowLeft size={14} /> 上一篇
+                    </div>
+                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                      {prevPost.data.title}
+                    </div>
+                  </a>
                 ) : <div />}
-                
+              </div>
+
+              <div class="flex justify-end">
                 {nextPost && nextPostId ? (
-                  <div class="flex justify-end">
-                    <a href={`/posts/${nextPostId}`}
-                      class="group w-full text-right p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5">
-                      <div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold">
-                        下一篇 <ArrowRight size={14} />
-                      </div>
-                      <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2">
-                        {nextPost.data.title}
-                      </div>
-                    </a>
-                  </div>
+                  <a
+                    href={`/posts/${nextPostId}`}
+                    class="group w-full text-right p-4 -mr-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
+                  >
+                    <div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                      下一篇 <ArrowRight size={14} />
+                    </div>
+                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                      {nextPost.data.title}
+                    </div>
+                  </a>
                 ) : <div />}
               </div>
             </div>
-          )}
+          </div>
 
           <Comment client:load />
         </article>
@@ -168,4 +172,5 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
       <Footer client:load />
     </main>
   </div>
+
 </BaseLayout>
