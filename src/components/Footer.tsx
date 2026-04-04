@@ -6,7 +6,6 @@ export default function Footer() {
 
   // 计算网站运行时间
   useEffect(() => {
-    // 这里改成你的网站上线日期
     const launchDate = new Date('2025-07-17 00:00:00');
 
     const updateTime = () => {
@@ -78,19 +77,14 @@ export default function Footer() {
         </a>
       </div>
 
-      {/* 空间穿梭 - BlogsClub 徽章 */}
+      {/* BlogsClub 排行榜徽章 */}
       <div className="mt-3">
-        <a
-          href="https://blogs.quest"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="空间穿梭-随机访问BlogsClub成员博客"
-          className="inline-block hover:opacity-80 transition-opacity"
-        >
+        <a href="https://www.blogsclub.org/rank.html" target="_blank" rel="noopener noreferrer">
           <img
-            src="https://www.blogsclub.org/images/shuttle_9.svg"
-            alt="空间穿梭"
-            className="h-5 w-auto"
+            src="https://www.blogsclub.org/badge/www.wsyblog.cn"
+            style={{ height: '60px!important' }}
+            alt="BlogsClub Rank"
+            loading="lazy"
           />
         </a>
       </div>
