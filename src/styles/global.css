@@ -424,8 +424,8 @@ code:not(pre code):not([class*="language-"]) {
 /* 文章头部整体缩小间距 */
 article header.relative {
   padding-top: 4px !important;
-  padding-bottom: 13px !important;
-  margin-bottom: 13px !important;
+  padding-bottom: 19px !important;
+  margin-bottom: 19px !important;
 }
 
 /* 标签下方间距缩小 */
@@ -436,10 +436,10 @@ article header.relative {
 
 /* 标题下方间距缩小 */
 h1.text-3xl {
-  margin-bottom: 8px !important;
+  margin-bottom: 13px !important;
 }
 
 /* 摘要下方间距缩小 */
 article header p {
-  margin-bottom: 12px !important;
+  margin-bottom: 8px !important;
 }
