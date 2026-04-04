@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, Search, X } from 'lucide-react';
+import { Menu, Search, X, Home, Archive, Link, Train, User } from 'lucide-react';
 import { NAVBAR } from '../config';
 
 interface NavbarProps {
@@ -7,6 +7,15 @@ interface NavbarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
+
+// 图标映射表 - 将配置中的icon字符串映射到Lucide组件
+const iconMap: Record<string, React.FC<{ size?: number; className?: string }>> = {
+  'mdi:home': Home,
+  'mdi:archive': Archive,
+  'mdi:link': Link,
+  'mdi:train': Train,
+  'mdi:account': User,
+};
 
 export default function Navbar({ currentPath, searchQuery: initialSearchQuery, setSearchQuery }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -161,6 +170,31 @@ export default function Navbar({ currentPath, searchQuery: initialSearchQuery, s
   const bgOpacity = NAVBAR.backgroundOpacity;
   const backdropBlur = NAVBAR.enableBackdropBlur ? 'backdrop-blur-md' : '';
 
+  // 渲染导航链接的辅助函数
+  const renderNavLink = (link: any, isMobile: boolean = false) => {
+    const IconComponent = link.icon ? iconMap[link.icon] : null;
+    
+    return (
+      <a
+        key={link.label}
+        href={link.href}
+        target={link.target || undefined}
+        rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
+        className={`${isMobile 
+          ? 'block w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center gap-2' 
+          : 'px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1.5'
+        } ${currentPath === link.href
+          ? 'text-docs-accent bg-blue-50'
+          : 'text-slate-600 hover:text-docs-accent hover:bg-slate-50'
+        }`}
+        onClick={isMobile ? () => setIsMobileMenuOpen(false) : undefined}
+      >
+        {IconComponent && <IconComponent size={isMobile ? 18 : 16} />}
+        {link.label}
+      </a>
+    );
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300">
       <div
@@ -209,20 +243,7 @@ export default function Navbar({ currentPath, searchQuery: initialSearchQuery, s
           ) : (
             <div className="hidden md:block flex-1">
               <div className="ml-10 flex items-baseline space-x-8">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target={(link as any).target || undefined}
-                    rel={(link as any).target === '_blank' ? 'noopener noreferrer' : undefined}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${currentPath === link.href
-                      ? 'text-docs-accent bg-blue-50'
-                      : 'text-slate-600 hover:text-docs-accent hover:bg-slate-50'
-                      }`}
-                  >
-                    {link.label}
-                  </a>
-                ))}
+                {navLinks.map((link) => renderNavLink(link))}
               </div>
             </div>
           )}
@@ -253,25 +274,10 @@ export default function Navbar({ currentPath, searchQuery: initialSearchQuery, s
       {isMobileMenuOpen && !isSearchOpen && (
         <div className="relative md:hidden bg-white/90 backdrop-blur-xl border-b border-slate-200 animate-in slide-in-from-top-5">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target={(link as any).target || undefined}
-                rel={(link as any).target === '_blank' ? 'noopener noreferrer' : undefined}
-                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${currentPath === link.href
-                  ? 'text-docs-accent bg-blue-50'
-                  : 'text-slate-600'
-                  }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => renderNavLink(link, true))}
           </div>
         </div>
       )}
     </nav>
   );
 }
-
