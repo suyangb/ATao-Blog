@@ -7,7 +7,7 @@ import PostCard from '../components/PostCard';
 import ParticlesBackground from '../components/ParticlesBackground';
 import TagFilters from '../components/TagFilters';
 import { BLOG_NAME, SITE_DESCRIPTION, HOME_PAGE, NAVBAR, FEATURES } from '../config';
-import { Search } from 'lucide-react';
+import { Search, Calendar, Clock, Tags, BookOpen, ChevronDown } from 'lucide-react';
 import { calculateReadingTime } from '../utils/readingTime';
 import { generateShortId } from '../utils/slug';
 
@@ -40,6 +40,8 @@ const posts = allPosts.sort((a, b) => {
 
 const allTags = Array.from(new Set(posts.flatMap(post => post.data.tags))).sort();
 const postsPerPage = HOME_PAGE.postsPerPage;
+const totalPosts = posts.length;
+const totalTags = allTags.length;
 ---
 
 <BaseLayout title={BLOG_NAME}>
@@ -53,22 +55,22 @@ const postsPerPage = HOME_PAGE.postsPerPage;
     setSearchQuery={() => {}}
   />
 
-  <main class="flex-1 relative w-full max-w-4xl mx-auto px-5 sm:px-8 pt-24 pb-20 z-10">
-    <div class="space-y-12">
+  <main class="flex-1 relative w-full max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-24 z-10">
+    <div class="space-y-14">
 
-      <!-- 顶部标题诗句区域 -->
-      <div class="text-center mb-10 animate-fade-in">
+      <!-- 顶部标题区域 -->
+      <div class="text-center mb-6">
         <div id="search-header" class="hidden">
           <p class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">搜索结果</p>
           <h1 class="text-3xl font-bold text-slate-900 dark:text-white" id="search-query"></h1>
         </div>
 
         <div id="normal-header">
-          <div class="mx-auto max-w-2xl text-left">
+          <div class="mx-auto max-w-2xl text-center sm:text-left">
             {
               HOME_PAGE.verse.includes('\n')
                 ? (
-                  <div class="space-y-2">
+                  <div class="space-y-1">
                     {HOME_PAGE.verse.split('\n').map((line, i) => (
                       <p
                         key={i}
@@ -92,105 +94,129 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         </div>
       </div>
 
-      <!-- 个人信息卡片 -->
-      <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex items-center gap-5">
+      <!-- 博客数据统计卡片 -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center">
+          <BookOpen class="w-5 h-5 text-blue-500 mb-1" />
+          <p class="text-xl font-bold text-slate-900 dark:text-white">{totalPosts}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">总文章</p>
+        </div>
+        <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center">
+          <Tags class="w-5 h-5 text-purple-500 mb-1" />
+          <p class="text-xl font-bold text-slate-900 dark:text-white">{totalTags}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">标签数</p>
+        </div>
+        <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center">
+          <Calendar class="w-5 h-5 text-emerald-500 mb-1" />
+          <p class="text-xl font-bold text-slate-900 dark:text-white">{posts[0]?.data.date || '-'}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">最新更新</p>
+        </div>
+        <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center">
+          <Clock class="w-5 h-5 text-orange-500 mb-1" />
+          <p class="text-xl font-bold text-slate-900 dark:text-white">持续更新</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">运行状态</p>
+        </div>
+      </div>
+
+      <!-- 个人信息 -->
+      <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl p-6 border border-slate-200 dark:border-slate-700/50 shadow-sm flex items-center gap-5">
         <img
           src="https://www.wsyblog.cn/IMG_8745.jpeg"
           alt="王苏洋"
           class="w-16 h-16 rounded-full object-cover shadow-md border-2 border-white dark:border-slate-700"
         />
-        <div>
+        <div class="flex-1">
           <h2 class="text-xl font-bold text-slate-900 dark:text-white">王苏洋</h2>
-          <p class="text-slate-500 dark:text-slate-400 mt-0.5">折腾不止，记录不停</p>
+          <p class="text-slate-500 dark:text-slate-400 mt-0.5">折腾不止，记录不停 • 认真生活</p>
+        </div>
+        <div class="flex gap-3">
+          <a
+            href="https://github.com/suyangb"
+            target="_blank"
+            class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          </a>
+          <a
+            href="mailto:1493367306@qq.com"
+            class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9-2-2-2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </a>
         </div>
       </div>
 
-      <!-- 社交链接 -->
-      <div class="flex gap-5 text-lg text-slate-600 dark:text-slate-400">
-        <a
-          href="https://github.com/suyangb"
-          target="_blank"
-          class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all hover:scale-105"
+      <!-- 向下滚动提示 -->
+      <div class="flex justify-center">
+        <button
+          onclick="window.scrollTo({top:document.querySelector('#posts-container').offsetTop-100,behavior:'smooth'})"
+          class="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-        </a>
-        <a
-          href="/feed"
-          target="_blank"
-          class="p-2 rounded-xl hover:bg-orange-50 dark:hover:bg-orange-950/30 text-orange-500 transition-all hover:scale-105"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 11a9 9 0 0 1 9 9"></path>
-            <path d="M4 4a16 16 0 0 1 16 16"></path>
-            <circle cx="5" cy="19" r="1"></circle>
-          </svg>
-        </a>
-        <a
-          href="mailto:1493367306@qq.com"
-          class="p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 text-red-400 transition-all hover:scale-105"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9-2-2-2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-        </a>
+          查看文章
+          <ChevronDown class="w-4 h-4 animate-bounce" />
+        </button>
       </div>
 
       <!-- 分隔线 -->
       <div class="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent"></div>
 
-      <!-- 标签 + 文章列表 -->
-      <div class="space-y-8">
+      <!-- 标签筛选 -->
+      <div>
         {HOME_PAGE.showTagFilters && <TagFilters client:idle tags={allTags} />}
-
-        <div
-          class="grid grid-cols-1 gap-6 md:gap-8"
-          id="posts-container"
-          data-posts-per-page={postsPerPage}
-        >
-          {posts.map((post) => {
-            const plainTextContent = markdownToPlainText(post.body);
-            return (
-              <div
-                data-post-card
-                data-title={post.data.title}
-                data-tags={post.data.tags.join(' ')}
-                data-description={post.data.summary || ''}
-                data-content={plainTextContent}
-                data-post-id={post.id}
-                class="transition-all duration-500"
-              >
-                <PostCard
-                  client:visible
-                  post={{
-                    id: post.id,
-                    title: post.data.title,
-                    summary: post.data.summary,
-                    date: post.data.date,
-                    tags: post.data.tags,
-                    readingTime: post.data.readingTime || calculateReadingTime(post.body),
-                    slug: generateShortId(post.id),
-                  }}
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        {postsPerPage > 0 && (
-          <div id="pagination" class="hidden flex flex-wrap items-center justify-center gap-1.5 mt-12"></div>
-        )}
       </div>
+
+      <!-- 文章列表 -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"
+        id="posts-container"
+        data-posts-per-page={postsPerPage}
+      >
+        {posts.map((post) => {
+          const plainTextContent = markdownToPlainText(post.body);
+          return (
+            <div
+              data-post-card
+              data-title={post.data.title}
+              data-tags={post.data.tags.join(' ')}
+              data-description={post.data.summary || ''}
+              data-content={plainTextContent}
+              data-post-id={post.id}
+              class="transition-all duration-500 hover:-translate-y-1 hover:shadow-md"
+            >
+              <PostCard
+                client:visible
+                post={{
+                  id: post.id,
+                  title: post.data.title,
+                  summary: post.data.summary,
+                  date: post.data.date,
+                  tags: post.data.tags,
+                  readingTime: post.data.readingTime || calculateReadingTime(post.body),
+                  slug: generateShortId(post.id),
+                }}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- 分页 -->
+      {postsPerPage > 0 && (
+        <div id="pagination" class="hidden flex flex-wrap items-center justify-center gap-2 mt-10"></div>
+      )}
 
       <!-- 无搜索结果 -->
       <div id="no-results" class="hidden flex-col items-center justify-center py-16 text-center">
         <div class="w-20 h-20 bg-slate-100 dark:bg-slate-800/50 rounded-full flex items-center justify-center text-slate-400 mb-6">
           <Search size={28} />
         </div>
-        <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">未找到文章</h3>
+        <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">未找到相关文章</h3>
         <p class="text-slate-500 dark:text-slate-400 max-w-md mb-8" id="no-results-message"></p>
         <button
           id="clear-filters"
           class="px-6 py-2.5 rounded-xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-sm font-medium hover:shadow-md transition-all"
         >
-          清除所有筛选
+          清除筛选条件
         </button>
       </div>
 
@@ -296,13 +322,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const totalPages = Math.ceil(visiblePosts.length / postsPerPage);
       const show = visiblePosts.slice(0, postsPerPage);
       show.forEach((p, i) => {
-        p.element.style.animationDelay = `${i * 80}ms`;
+        p.element.style.animationDelay = `${i * 60}ms`;
         p.element.classList.add('animate-fade-in', 'animate-slide-up');
       });
       updatePagination(totalPages);
     }
 
-    // 标签按钮高亮
     document.querySelectorAll('[data-tag-filter]').forEach(btn => {
       const t = btn.dataset.tagFilter;
       const isActive = (selectedTag === null && t === '') || (selectedTag === t);
@@ -322,8 +347,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const b = document.createElement('button');
       b.className = `w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium transition-all ${
         isActive
-          ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-          : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+          ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md'
+          : 'bg-white/80 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60'
       }`;
       b.textContent = text;
       if (onClick) b.addEventListener('click', onClick);
