@@ -26,16 +26,26 @@ export default function Footer() {
     return () => clearInterval(timer);
   }, []);
 
+  // 加载爱站统计脚本
+  useEffect(() => {
+    try {
+      var _mtj = (window as any)._mtj || [];
+      (function () {
+        var mtj = document.createElement("script");
+        (mtj as any).src = "https://node94.aizhantj.com:21233/tjjs/?k=z1focj1ja9h";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode?.insertBefore(mtj, s);
+      })();
+    } catch (err) {}
+  }, []);
+
   return (
     <footer className="mt-auto pb-10 text-center text-xs text-slate-400 dark:text-slate-500">
       <div className="w-24 h-1 mx-auto bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent mb-8"></div>
       <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] sm:text-xs text-slate-400/80 dark:text-slate-500">
-        <a
-          href="/"
-          className="hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
-        >
+        <span>
           © {new Date().getFullYear()} 王苏洋Blog 主题 · 基于 Astro & Tailwind 构建
-        </a>
+        </span>
         <span className="text-slate-300 dark:text-slate-600">·</span>
         <a
           href="https://beian.miit.gov.cn/"
@@ -65,6 +75,23 @@ export default function Footer() {
           aria-label="RSS 订阅"
         >
           RSS订阅
+        </a>
+      </div>
+
+      {/* 空间穿梭 - BlogsClub 徽章 */}
+      <div className="mt-3">
+        <a
+          href="https://blogs.quest"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="空间穿梭-随机访问BlogsClub成员博客"
+          className="inline-block hover:opacity-80 transition-opacity"
+        >
+          <img
+            src="https://www.blogsclub.org/images/shuttle_9.svg"
+            alt="空间穿梭"
+            className="h-5 w-auto"
+          />
         </a>
       </div>
     </footer>
