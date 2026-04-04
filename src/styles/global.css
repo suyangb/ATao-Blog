@@ -412,12 +412,12 @@ code:not(pre code):not([class*="language-"]) {
 /* 仅手机端文章全屏 */
 @media (max-width: 640px) {
   main {
-    max-width: 95% !important;
+    max-width: 90% !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
   article {
-    padding-left: 5px !important;
-    padding-right: 5px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 }
