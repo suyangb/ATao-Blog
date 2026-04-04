@@ -11,6 +11,7 @@ import { Search } from 'lucide-react';
 import { calculateReadingTime } from '../utils/readingTime';
 import { generateShortId } from '../utils/slug';
 
+// Function to convert markdown to plain text for search
 function markdownToPlainText(markdown: string): string {
   return markdown
     .replace(/```[\s\S]*?```/g, '')
@@ -39,7 +40,6 @@ const posts = allPosts.sort((a, b) => {
 });
 
 const allTags = Array.from(new Set(posts.flatMap(post => post.data.tags))).sort();
-const allCategories = Array.from(new Set(posts.map(post => post.data.category).filter(Boolean))).sort();
 const postsPerPage = HOME_PAGE.postsPerPage;
 ---
 
@@ -95,6 +95,7 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           </div>
         </div>
 
+        <!-- 个人信息区域 -->
         <div class="flex items-center gap-4 my-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <img 
             src="https://www.wsyblog.cn/IMG_8745.jpeg" 
@@ -107,7 +108,8 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           </div>
         </div>
 
-        <div class="flex items-center justify-start gap-6 my-4 ml-0 text-slate-600 dark:text-slate-400">
+        <!-- 美化后的社交图标区域 -->
+        <div class="flex items-center justify-start gap-6 my-4 ml-2 text-slate-600 dark:text-slate-400">
           <a href="https://github.com/suyangb" target="_blank" rel="noopener noreferrer" 
              class="transition-all duration-300 hover:text-black dark:hover:text-white hover:scale-110">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
@@ -126,29 +128,8 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           </a>
         </div>
 
+        <!-- 分隔线 -->
         <div class="w-full h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent"></div>
-
-        <!-- 分类切换栏 -->
-        {
-          allCategories.length > 0 && (
-            <div class="flex flex-wrap gap-2 mb-4" id="category-filters">
-              <button 
-                data-category-filter
-                class="px-3 py-1 rounded-full text-sm border transition-all"
-              >
-                全部
-              </button>
-              {allCategories.map(cat => (
-                <button 
-                  data-category-filter={cat}
-                  class="px-3 py-1 rounded-full text-sm border transition-all"
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          )
-        }
 
         <div class="relative">
           {HOME_PAGE.showTagFilters && <TagFilters client:idle tags={allTags} />}
@@ -160,7 +141,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
             <div
               data-post-card
               data-title={post.data.title}
-              data-category={post.data.category || ''}
               data-tags={post.data.tags.join(' ')}
               data-description={post.data.summary || ''}
               data-content={plainTextContent}
@@ -227,7 +207,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
       }
 
       let searchQuery = initialSearchQuery;
-      let selectedCategory = null;
       let selectedTag = null;
       let currentPage = 1;
       const postsContainer = document.getElementById('posts-container');
@@ -248,39 +227,12 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         initSearch();
       }
 
-      // 分类按钮点击
-      document.querySelectorAll('[data-category-filter]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          selectedCategory = btn.dataset.categoryFilter || null;
-          updateCategoryActive();
-          updateFilters();
-        });
-      });
-
-      function updateCategoryActive() {
-        document.querySelectorAll('[data-category-filter]').forEach(btn => {
-          const cat = btn.dataset.categoryFilter || null;
-          const active = (selectedCategory === null && !cat) || (selectedCategory === cat);
-          
-          btn.classList.remove(
-            'bg-slate-800','text-white','dark:bg-white','dark:text-slate-900',
-            'hover:bg-slate-900','dark:hover:bg-slate-100'
-          );
-          btn.classList.add(
-            active 
-              ? 'bg-slate-800 text-white dark:bg-white dark:text-slate-900 hover:bg-slate-900 dark:hover:bg-slate-100'
-              : 'bg-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10'
-          );
-        });
-      }
-
       function getPostsData() {
         const postsData = [];
         document.querySelectorAll('[data-post-card]').forEach(card => {
           postsData.push({
             id: card.dataset.postId || '',
             title: card.dataset.title || '',
-            category: card.dataset.category || '',
             tags: card.dataset.tags?.split(' ') || [],
             content: card.dataset.content || '',
             element: card
@@ -291,7 +243,6 @@ const postsPerPage = HOME_PAGE.postsPerPage;
 
       function updateFilters() {
         const query = searchQuery.toLowerCase().trim();
-        const cat = selectedCategory;
         const tag = selectedTag;
         currentPage = 1;
 
@@ -310,14 +261,13 @@ const postsPerPage = HOME_PAGE.postsPerPage;
         const postsData = getPostsData();
         const visiblePosts = [];
         postsData.forEach(post => {
-          const { title, category, tags, content, element } = post;
+          const { title, tags, content, element } = post;
           const matchesSearch = !query || 
             title.toLowerCase().includes(query) || 
             tags.some(t => t.toLowerCase().includes(query)) ||
             content.toLowerCase().includes(query);
-          const matchesCat = !cat || category === cat;
           const matchesTag = !tag || tags.includes(tag);
-          const matches = matchesSearch && matchesCat && matchesTag;
+          const matches = matchesSearch && matchesTag;
 
           element.style.display = 'none';
           if (matches) visiblePosts.push(post);
@@ -333,15 +283,9 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           postsContainer?.classList.add('hidden');
           document.getElementById('pagination')?.classList.add('hidden');
           if (noResultsMessage) {
-            let msg = '';
-            if (query && cat && tag) msg = `没有找到含 "${query}"、分类 "${cat}"、标签 "${tag}" 的文章`;
-            else if (query && cat) msg = `没有找到含 "${query}"、分类 "${cat}" 的文章`;
-            else if (query && tag) msg = `没有找到含 "${query}"、标签 "${tag}" 的文章`;
-            else if (cat && tag) msg = `没有找到分类 "${cat}"、标签 "${tag}" 的文章`;
-            else if (query) msg = `没有找到含 "${query}" 的文章`;
-            else if (cat) msg = `没有找到分类 "${cat}" 的文章`;
-            else if (tag) msg = `没有找到标签 "${tag}" 的文章`;
-            noResultsMessage.textContent = msg;
+            if (query && tag) noResultsMessage.textContent = `没有找到同时包含 "${query}" 且带有标签 "${tag}" 的文章。`;
+            else if (query) noResultsMessage.textContent = `没有找到包含 "${query}" 的文章。`;
+            else if (tag) noResultsMessage.textContent = `没有找到带有标签 "${tag}" 的文章。`;
           }
           return;
         }
@@ -366,6 +310,29 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           visiblePosts.forEach(p => p.element.style.display = '');
           document.getElementById('pagination')?.classList.add('hidden');
         }
+
+        document.querySelectorAll('[data-tag-filter]').forEach(btn => {
+          const btnTag = btn.dataset.tagFilter || null;
+          const isAll = btnTag === '';
+          const active = (selectedTag === null && isAll) || (selectedTag === btnTag);
+
+          const activeClasses = [
+            'bg-slate-800', 'text-white', 'border-slate-800',
+            'dark:bg-white', 'dark:text-slate-900', 'dark:border-white',
+            'shadow-md', 'hover:bg-slate-900', 'hover:text-white', 'hover:border-slate-900',
+            'dark:hover:bg-slate-100', 'dark:hover:text-slate-900', 'dark:hover:border-white'
+          ];
+          
+          const inactiveClasses = [
+            'bg-transparent', 'text-slate-600', 'border-slate-200',
+            'dark:text-slate-400', 'dark:border-white/10',
+            'hover:bg-slate-50', 'hover:border-docs-accent/50', 'hover:text-docs-accent',
+            'dark:hover:bg-white/5', 'dark:hover:border-dark-accent/50', 'dark:hover:text-dark-accent'
+          ];
+          
+          btn.classList.remove(...activeClasses, ...inactiveClasses);
+          btn.classList.add(active ? activeClasses : inactiveClasses);
+        });
       }
 
       function updatePagination(totalPages) {
@@ -404,6 +371,7 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           return button;
         };
         
+        // 原始箭头样式（完全恢复你原来的）
         const createArrowButton = (direction, disabled) => {
           const button = document.createElement('button');
           button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 ${
@@ -416,7 +384,7 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
           svg.setAttribute('width', '16');
           svg.setAttribute('height', '16');
-          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('viewBox', '0 24 24');
           svg.setAttribute('fill', 'none');
           svg.setAttribute('stroke', 'currentColor');
           svg.setAttribute('stroke-width', '2');
@@ -471,14 +439,12 @@ const postsPerPage = HOME_PAGE.postsPerPage;
 
       function goToPage(page) {
         const query = searchQuery.toLowerCase().trim();
-        const cat = selectedCategory;
         const tag = selectedTag;
         const postsData = getPostsData();
         const visiblePosts = postsData.filter(p => {
           const ms = !query || p.title.toLowerCase().includes(query) || p.tags.some(t => t.toLowerCase().includes(query)) || p.content.toLowerCase().includes(query);
-          const mc = !cat || p.category === cat;
           const mt = !tag || p.tags.includes(tag);
-          return ms && mc && mt;
+          return ms && mt;
         });
 
         const totalPages = Math.ceil(visiblePosts.length / postsPerPage);
@@ -512,15 +478,12 @@ const postsPerPage = HOME_PAGE.postsPerPage;
 
       document.getElementById('clear-filters')?.addEventListener('click', () => {
         searchQuery = '';
-        selectedCategory = null;
         selectedTag = null;
         const inp = document.querySelector('input[type="text"]');
         if (inp) inp.value = '';
-        updateCategoryActive();
         updateFilters();
       });
 
-      updateCategoryActive();
       updateFilters();
       window.dispatchEvent(new CustomEvent('tag-filter-changed', { detail: { tag: '' } }));
     });
