@@ -6,6 +6,7 @@ export default function Footer() {
 
   // 计算网站运行时间
   useEffect(() => {
+    // 这里改成你的网站上线日期
     const launchDate = new Date('2025-07-17 00:00:00');
 
     const updateTime = () => {
@@ -74,18 +75,6 @@ export default function Footer() {
           aria-label="RSS 订阅"
         >
           RSS订阅
-        </a>
-      </div>
-
-      {/* BlogsClub 排行榜徽章 */}
-      <div className="mt-3">
-        <a href="https://www.blogsclub.org/rank.html" target="_blank" rel="noopener noreferrer">
-          <img
-            src="https://www.blogsclub.org/badge/www.wsyblog.cn"
-            style={{ height: '60px!important' }}
-            alt="BlogsClub Rank"
-            loading="lazy"
-          />
         </a>
       </div>
     </footer>
