@@ -10,7 +10,7 @@ import ProgressBar from '../../components/ProgressBar';
 import TableOfContents from '../../components/TableOfContents';
 import ScrollToTop from '../../components/ScrollToTop';
 import Comment from '../../components/Comment';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, Clock } from 'lucide-react';
 import { calculateReadingTime } from '../../utils/readingTime';
 import { generateShortId } from '../../utils/slug';
 import { FEATURES } from '../../config';
@@ -95,7 +95,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
               </div>
 
               {/* Title */}
-              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-6 max-w-4xl animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
+              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:white font-serif leading-tight mb-6 max-w-4xl animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
                 {post.data.title}
                 {/* Underline Decoration */}
                 <div class="absolute -bottom-4 left-0 w-24 h-1 bg-docs-accent/30 rounded-full"></div>
@@ -111,13 +111,13 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
               {/* Metadata */}
               <div class="flex items-center gap-6 text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
                 <div class="flex items-center gap-2">
-                  <div class="w-1.5 h-1.5 rounded-sm bg-docs-accent rotate-45"></div>
+                  <Calendar size={14} class="text-docs-accent" />
                   <span>{post.data.date}</span>
                 </div>
                 <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
                 <div class="flex items-center gap-2">
+                  <Clock size={14} class="text-docs-accent" />
                   <span>{readingTime}</span>
-                  <div class="w-1.5 h-1.5 rounded-sm bg-docs-accent rotate-45"></div>
                 </div>
               </div>
             </div>
