@@ -409,15 +409,3 @@ code:not(pre code):not([class*="language-"]) {
   font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   font-weight: 400 !important;
 }
-/* 仅手机端文章全屏 */
-@media (max-width: 640px) {
-  main {
-    max-width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  article {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-}
