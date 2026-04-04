@@ -15,20 +15,6 @@ import { calculateReadingTime } from '../../utils/readingTime';
 import { generateShortId } from '../../utils/slug';
 import { FEATURES } from '../../config';
 
-// 字数统计
-function countChineseCharacters(text: string): number {
-  const pure = text
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/`[^`]+`/g, '')
-    .replace(/!\[.*?\]\(.*?\)/g, '')
-    .replace(/\[.*?\]\(.*?\)/g, '$1')
-    .replace(/<[^>]+>/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-  const chinese = pure.match(/[\u4e00-\u9fa5]/g) || [];
-  return chinese.length;
-}
-
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => {
@@ -45,7 +31,7 @@ const allPosts = await getCollection('blog');
 const sortedPosts = allPosts.sort((a, b) => {
   const dateA = new Date(a.data.date.replace(/年|月|日/g, '/'));
   const dateB = new Date(b.data.date.replace(/年|月|日/g, '/'));
-  return dateB.getTime() - dateA.getTime();
+  return dateB.getTime() - dateB.getTime();
 });
 
 const currentIndex = sortedPosts.findIndex(p => generateShortId(p.id) === shortId);
@@ -56,7 +42,6 @@ const prevPostId = prevPost ? generateShortId(prevPost.id) : null;
 const nextPostId = nextPost ? generateShortId(nextPost.id) : null;
 
 const readingTime = post.data.readingTime || calculateReadingTime(post.body);
-const wordCount = countChineseCharacters(post.body);
 ---
 
 <BaseLayout title={`${post.data.title} | 王苏洋Blog`}>
@@ -124,11 +109,6 @@ const wordCount = countChineseCharacters(post.body);
                 <div class="flex items-center gap-2">
                   <Clock size={14} class="text-docs-accent" />
                   <span>{readingTime}</span>
-                </div>
-                <!-- 字数统计 -->
-                <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
-                <div class="flex items-center gap-2">
-                  <span>{wordCount} 字</span>
                 </div>
               </div>
             </div>
