@@ -7,7 +7,7 @@ import PostCard from '../components/PostCard';
 import ParticlesBackground from '../components/ParticlesBackground';
 import TagFilters from '../components/TagFilters';
 import { BLOG_NAME, SITE_DESCRIPTION, HOME_PAGE, NAVBAR, FEATURES } from '../config';
-import { Search, Calendar, Clock, Tags, BookOpen, ChevronDown } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { calculateReadingTime } from '../utils/readingTime';
 import { generateShortId } from '../utils/slug';
 
@@ -39,151 +39,135 @@ const posts = allPosts.sort((a, b) => {
 });
 
 const allTags = Array.from(new Set(posts.flatMap(post => post.data.tags))).sort();
+const allCategories = Array.from(new Set(posts.map(post => post.data.category).filter(Boolean))).sort();
 const postsPerPage = HOME_PAGE.postsPerPage;
-const totalPosts = posts.length;
-const totalTags = allTags.length;
 ---
 
 <BaseLayout title={BLOG_NAME}>
-<div class="min-h-screen relative flex flex-col" id="app">
-  {HOME_PAGE.showParticles && FEATURES.particles && <ParticlesBackground client:idle />}
+  <div class="min-h-screen relative flex flex-col" id="app">
+    {HOME_PAGE.showParticles && FEATURES.particles && <ParticlesBackground client:idle />}
+    
+    <Navbar 
+      client:load
+      currentPath="/"
+      searchQuery=""
+      setSearchQuery={() => {}}
+    />
 
-  <Navbar
-    client:load
-    currentPath="/"
-    searchQuery=""
-    setSearchQuery={() => {}}
-  />
-
-  <main class="flex-1 relative w-full max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-24 z-10">
-    <div class="space-y-14">
-
-      <!-- 顶部标题区域 -->
-      <div class="text-center mb-6">
-        <div id="search-header" class="hidden">
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">搜索结果</p>
-          <h1 class="text-3xl font-bold text-slate-900 dark:text-white" id="search-query"></h1>
-        </div>
-
-        <div id="normal-header">
-          <div class="mx-auto max-w-2xl text-center sm:text-left">
-            {
-              HOME_PAGE.verse.includes('\n')
-                ? (
-                  <div class="space-y-1">
-                    {HOME_PAGE.verse.split('\n').map((line, i) => (
-                      <p
-                        key={i}
-                        class="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight"
-                      >
-                        {line}
-                      </p>
-                    ))}
-                  </div>
-                )
-                : (
-                  <p class="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight">
-                    {HOME_PAGE.verse}
-                  </p>
-                )
-            }
-            <p class="text-right text-sm text-slate-500 dark:text-slate-400 italic mt-4">
-              — {HOME_PAGE.source}
-            </p>
+    <main class="flex-1 flex flex-col relative w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 z-10 overflow-x-hidden">
+      <div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div class="text-center py-6 sm:py-10">
+          <div id="search-header" class="hidden">
+            <p class="text-slate-500 dark:text-slate-400 mb-2 text-sm font-medium uppercase tracking-widest">搜索结果</p>
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white font-serif" id="search-query"></h1>
+          </div>
+          <div id="normal-header">
+            <div class="relative w-full max-w-4xl mx-auto">
+              <div class="relative">
+                <div class="space-y-4 w-full max-w-xl mx-auto">
+                  {(() => {
+                    const verse = HOME_PAGE.verse;
+                    if (verse.includes('\n')) {
+                      const parts = verse.split('\n');
+                      return (
+                        <>
+                          <div class="text-left">
+                            <span class="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight">{parts[0]}</span>
+                          </div>
+                            <div class="text-left pl-24 sm:pl-32">
+                              <span class="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight">{parts[1] || ''}</span>
+                            </div>
+                        </>
+                      );
+                    }
+                    return (
+                      <div class="text-left">
+                        <span class="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white font-serif leading-tight">{verse}</span>
+                      </div>
+                    );
+                  })()}
+                </div>
+                <p class="text-right text-sm sm:text-base text-slate-500 dark:text-slate-400 font-serif italic mt-4 mr-8 sm:mr-12">
+                  — {HOME_PAGE.source}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 博客数据统计卡片 -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center">
-          <BookOpen class="w-5 h-5 text-blue-500 mb-1" />
-          <p class="text-xl font-bold text-slate-900 dark:text-white">{totalPosts}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">总文章</p>
+        <div class="flex items-center gap-4 my-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <img 
+            src="https://www.wsyblog.cn/IMG_8745.jpeg" 
+            alt="王苏洋头像" 
+            class="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-md"
+          />
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">王苏洋</h2>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400">折腾不止，记录不停</p>
+          </div>
         </div>
-        <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center">
-          <Tags class="w-5 h-5 text-purple-500 mb-1" />
-          <p class="text-xl font-bold text-slate-900 dark:text-white">{totalTags}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">标签数</p>
-        </div>
-        <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center">
-          <Calendar class="w-5 h-5 text-emerald-500 mb-1" />
-          <p class="text-xl font-bold text-slate-900 dark:text-white">{posts[0]?.data.date || '-'}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">最新更新</p>
-        </div>
-        <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center">
-          <Clock class="w-5 h-5 text-orange-500 mb-1" />
-          <p class="text-xl font-bold text-slate-900 dark:text-white">持续更新</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">运行状态</p>
-        </div>
-      </div>
 
-      <!-- 个人信息 -->
-      <div class="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl p-6 border border-slate-200 dark:border-slate-700/50 shadow-sm flex items-center gap-5">
-        <img
-          src="https://www.wsyblog.cn/IMG_8745.jpeg"
-          alt="王苏洋"
-          class="w-16 h-16 rounded-full object-cover shadow-md border-2 border-white dark:border-slate-700"
-        />
-        <div class="flex-1">
-          <h2 class="text-xl font-bold text-slate-900 dark:text-white">王苏洋</h2>
-          <p class="text-slate-500 dark:text-slate-400 mt-0.5">折腾不止，记录不停 • 认真生活</p>
-        </div>
-        <div class="flex gap-3">
-          <a
-            href="https://github.com/suyangb"
-            target="_blank"
-            class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 transition-all"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        <div class="flex items-center justify-start gap-6 my-4 ml-0 text-slate-600 dark:text-slate-400">
+          <a href="https://github.com/suyangb" target="_blank" rel="noopener noreferrer" 
+             class="transition-all duration-300 hover:text-black dark:hover:text-white hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
           </a>
-          <a
-            href="mailto:1493367306@qq.com"
-            class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 transition-all"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9-2-2-2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          <a href="/feed" target="_blank" rel="noopener noreferrer" 
+             class="transition-all duration-300 hover:text-orange-500 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 11a9 9 0 0 1 9 9"></path>
+              <path d="M4 4a16 16 0 0 1 16 16"></path>
+              <circle cx="5" cy="19" r="1"></circle>
+            </svg>
+          </a>
+          <a href="mailto:1493367306@qq.com" target="_blank" rel="noopener noreferrer" 
+             class="transition-all duration-300 hover:text-red-400 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9-2-2-2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
           </a>
         </div>
-      </div>
 
-      <!-- 向下滚动提示 -->
-      <div class="flex justify-center">
-        <button
-          onclick="window.scrollTo({top:document.querySelector('#posts-container').offsetTop-100,behavior:'smooth'})"
-          class="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-        >
-          查看文章
-          <ChevronDown class="w-4 h-4 animate-bounce" />
-        </button>
-      </div>
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent"></div>
 
-      <!-- 分隔线 -->
-      <div class="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent"></div>
+        <!-- 分类切换栏 -->
+        {
+          allCategories.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-4" id="category-filters">
+              <button 
+                data-category-filter
+                class="px-3 py-1 rounded-full text-sm border transition-all"
+              >
+                全部
+              </button>
+              {allCategories.map(cat => (
+                <button 
+                  data-category-filter={cat}
+                  class="px-3 py-1 rounded-full text-sm border transition-all"
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )
+        }
 
-      <!-- 标签筛选 -->
-      <div>
-        {HOME_PAGE.showTagFilters && <TagFilters client:idle tags={allTags} />}
-      </div>
-
-      <!-- 文章列表 -->
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"
-        id="posts-container"
-        data-posts-per-page={postsPerPage}
-      >
-        {posts.map((post) => {
-          const plainTextContent = markdownToPlainText(post.body);
-          return (
+        <div class="relative">
+          {HOME_PAGE.showTagFilters && <TagFilters client:idle tags={allTags} />}
+          
+          <div class="grid grid-cols-1 gap-8 min-h-[200px]" id="posts-container" data-posts-per-page={postsPerPage}>
+          {posts.map((post) => {
+            const plainTextContent = markdownToPlainText(post.body);
+            return (
             <div
               data-post-card
               data-title={post.data.title}
+              data-category={post.data.category || ''}
               data-tags={post.data.tags.join(' ')}
               data-description={post.data.summary || ''}
               data-content={plainTextContent}
               data-post-id={post.id}
-              class="transition-all duration-500 hover:-translate-y-1 hover:shadow-md"
+              class="transition-all duration-500"
             >
-              <PostCard
+              <PostCard 
                 client:visible
                 post={{
                   id: post.id,
@@ -196,221 +180,349 @@ const totalTags = allTags.length;
                 }}
               />
             </div>
-          );
-        })}
-      </div>
-
-      <!-- 分页 -->
-      {postsPerPage > 0 && (
-        <div id="pagination" class="hidden flex flex-wrap items-center justify-center gap-2 mt-10"></div>
-      )}
-
-      <!-- 无搜索结果 -->
-      <div id="no-results" class="hidden flex-col items-center justify-center py-16 text-center">
-        <div class="w-20 h-20 bg-slate-100 dark:bg-slate-800/50 rounded-full flex items-center justify-center text-slate-400 mb-6">
-          <Search size={28} />
+            );
+          })}
+          </div>
+          
+          {postsPerPage > 0 && (
+            <div id="pagination" class="hidden flex flex-wrap items-center justify-center gap-1.5 mt-12 mb-8">
+            </div>
+          )}
         </div>
-        <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">未找到相关文章</h3>
-        <p class="text-slate-500 dark:text-slate-400 max-w-md mb-8" id="no-results-message"></p>
-        <button
-          id="clear-filters"
-          class="px-6 py-2.5 rounded-xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-sm font-medium hover:shadow-md transition-all"
-        >
-          清除筛选条件
-        </button>
+
+        <div id="no-results" class="hidden flex-col items-center justify-center py-16 text-center animate-in fade-in duration-500">
+          <div class="w-20 h-20 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mb-6 text-slate-400">
+            <Search size={28} />
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">未找到文章</h3>
+          <p class="text-slate-500 dark:text-slate-400 mb-8 max-w-md" id="no-results-message"></p>
+          <button 
+            id="clear-filters"
+            class="px-6 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 transition-all duration-300 hover:shadow-md"
+          >
+            清除所有筛选
+          </button>
+        </div>
       </div>
 
-    </div>
+      <Footer client:idle />
+    </main>
+  </div>
 
-    <Footer client:idle class="mt-20" />
-  </main>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  let initialSearchQuery = '';
-  try {
-    const pendingQuery = sessionStorage.getItem('pendingSearchQuery');
-    if (pendingQuery) {
-      initialSearchQuery = pendingQuery;
-      sessionStorage.removeItem('pendingSearchQuery');
-    } else {
-      const urlParams = new URLSearchParams(window.location.search);
-      initialSearchQuery = urlParams.get('q') || '';
-    }
-  } catch (e) {
-    const urlParams = new URLSearchParams(window.location.search);
-    initialSearchQuery = urlParams.get('q') || '';
-  }
-
-  let searchQuery = initialSearchQuery;
-  let selectedTag = null;
-  let currentPage = 1;
-  const postsContainer = document.getElementById('posts-container');
-  const postsPerPage = parseInt(postsContainer?.dataset.postsPerPage || '0');
-
-  if (initialSearchQuery) {
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('search-updated', { detail: { query: initialSearchQuery } }));
-      const input = document.querySelector('input[type="text"]');
-      if (input) input.value = initialSearchQuery;
-    }, 100);
-  }
-
-  function getPostsData() {
-    return Array.from(document.querySelectorAll('[data-post-card]')).map(card => ({
-      id: card.dataset.postId || '',
-      title: card.dataset.title || '',
-      tags: card.dataset.tags?.split(' ') || [],
-      content: card.dataset.content || '',
-      element: card
-    }));
-  }
-
-  function updateFilters() {
-    const query = searchQuery.toLowerCase().trim();
-    const tag = selectedTag;
-    currentPage = 1;
-
-    const searchHeader = document.getElementById('search-header');
-    const normalHeader = document.getElementById('normal-header');
-    const searchQueryEl = document.getElementById('search-query');
-
-    if (query) {
-      searchHeader?.classList.remove('hidden');
-      normalHeader?.classList.add('hidden');
-      if (searchQueryEl) searchQueryEl.textContent = `"${query}"`;
-    } else {
-      searchHeader?.classList.add('hidden');
-      normalHeader?.classList.remove('hidden');
-    }
-
-    const postsData = getPostsData();
-    const visiblePosts = [];
-
-    postsData.forEach(post => {
-      const { title, tags, content } = post;
-      const matchSearch = !query
-        || title.toLowerCase().includes(query)
-        || tags.some(t => t.toLowerCase().includes(query))
-        || content.toLowerCase().includes(query);
-      const matchTag = !tag || tags.includes(tag);
-
-      post.element.style.display = matchSearch && matchTag ? '' : 'none';
-      if (matchSearch && matchTag) visiblePosts.push(post);
-    });
-
-    const noResults = document.getElementById('no-results');
-    const noResultsMessage = document.getElementById('no-results-message');
-
-    if (visiblePosts.length === 0) {
-      noResults?.classList.remove('hidden');
-      postsContainer?.classList.add('hidden');
-      document.getElementById('pagination')?.classList.add('hidden');
-      if (noResultsMessage) {
-        if (query && tag) noResultsMessage.textContent = `没有找到同时包含 "${query}" 且带有标签 "${tag}" 的文章。`;
-        else if (query) noResultsMessage.textContent = `没有找到包含 "${query}" 的文章。`;
-        else if (tag) noResultsMessage.textContent = `没有找到带有标签 "${tag}" 的文章。`;
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let initialSearchQuery = '';
+      try {
+        const pendingQuery = sessionStorage.getItem('pendingSearchQuery');
+        if (pendingQuery) {
+          initialSearchQuery = pendingQuery;
+          sessionStorage.removeItem('pendingSearchQuery');
+        } else {
+          const urlParams = new URLSearchParams(window.location.search);
+          initialSearchQuery = urlParams.get('q') || '';
+        }
+      } catch (e) {
+        const urlParams = new URLSearchParams(window.location.search);
+        initialSearchQuery = urlParams.get('q') || '';
       }
-      return;
-    }
 
-    noResults?.classList.add('hidden');
-    postsContainer?.classList.remove('hidden');
+      let searchQuery = initialSearchQuery;
+      let selectedCategory = null;
+      let selectedTag = null;
+      let currentPage = 1;
+      const postsContainer = document.getElementById('posts-container');
+      const postsPerPage = parseInt(postsContainer?.dataset.postsPerPage || '0');
 
-    if (postsPerPage > 0) {
-      const totalPages = Math.ceil(visiblePosts.length / postsPerPage);
-      const show = visiblePosts.slice(0, postsPerPage);
-      show.forEach((p, i) => {
-        p.element.style.animationDelay = `${i * 60}ms`;
-        p.element.classList.add('animate-fade-in', 'animate-slide-up');
+      if (initialSearchQuery) {
+        const initSearch = () => {
+          window.dispatchEvent(new CustomEvent('search-updated', {
+            detail: { query: initialSearchQuery }
+          }));
+          setTimeout(() => {
+            const searchButton = document.querySelector('button[aria-label="Open search"]');
+            const searchInput = document.querySelector('input[type="text"]');
+            if (searchButton && !searchInput) searchButton.click();
+            if (searchInput) searchInput.value = initialSearchQuery;
+          }, 100);
+        };
+        initSearch();
+      }
+
+      // 分类按钮点击
+      document.querySelectorAll('[data-category-filter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedCategory = btn.dataset.categoryFilter || null;
+          updateCategoryActive();
+          updateFilters();
+        });
       });
-      updatePagination(totalPages);
-    }
 
-    document.querySelectorAll('[data-tag-filter]').forEach(btn => {
-      const t = btn.dataset.tagFilter;
-      const isActive = (selectedTag === null && t === '') || (selectedTag === t);
-      btn.classList.toggle('bg-slate-900 text-white dark:bg-white dark:text-slate-900', isActive);
-      btn.classList.toggle('bg-transparent text-slate-600 dark:text-slate-400', !isActive);
+      function updateCategoryActive() {
+        document.querySelectorAll('[data-category-filter]').forEach(btn => {
+          const cat = btn.dataset.categoryFilter || null;
+          const active = (selectedCategory === null && !cat) || (selectedCategory === cat);
+          
+          btn.classList.remove(
+            'bg-slate-800','text-white','dark:bg-white','dark:text-slate-900',
+            'hover:bg-slate-900','dark:hover:bg-slate-100'
+          );
+          btn.classList.add(
+            active 
+              ? 'bg-slate-800 text-white dark:bg-white dark:text-slate-900 hover:bg-slate-900 dark:hover:bg-slate-100'
+              : 'bg-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10'
+          );
+        });
+      }
+
+      function getPostsData() {
+        const postsData = [];
+        document.querySelectorAll('[data-post-card]').forEach(card => {
+          postsData.push({
+            id: card.dataset.postId || '',
+            title: card.dataset.title || '',
+            category: card.dataset.category || '',
+            tags: card.dataset.tags?.split(' ') || [],
+            content: card.dataset.content || '',
+            element: card
+          });
+        });
+        return postsData;
+      }
+
+      function updateFilters() {
+        const query = searchQuery.toLowerCase().trim();
+        const cat = selectedCategory;
+        const tag = selectedTag;
+        currentPage = 1;
+
+        const searchHeader = document.getElementById('search-header');
+        const normalHeader = document.getElementById('normal-header');
+        const searchQueryEl = document.getElementById('search-query');
+        if (query) {
+          searchHeader?.classList.remove('hidden');
+          normalHeader?.classList.add('hidden');
+          if (searchQueryEl) searchQueryEl.textContent = `"${query}"`;
+        } else {
+          searchHeader?.classList.add('hidden');
+          normalHeader?.classList.remove('hidden');
+        }
+
+        const postsData = getPostsData();
+        const visiblePosts = [];
+        postsData.forEach(post => {
+          const { title, category, tags, content, element } = post;
+          const matchesSearch = !query || 
+            title.toLowerCase().includes(query) || 
+            tags.some(t => t.toLowerCase().includes(query)) ||
+            content.toLowerCase().includes(query);
+          const matchesCat = !cat || category === cat;
+          const matchesTag = !tag || tags.includes(tag);
+          const matches = matchesSearch && matchesCat && matchesTag;
+
+          element.style.display = 'none';
+          if (matches) visiblePosts.push(post);
+        });
+
+        const visibleCount = visiblePosts.length;
+        const noResults = document.getElementById('no-results');
+        const postsContainer = document.getElementById('posts-container');
+        const noResultsMessage = document.getElementById('no-results-message');
+
+        if (visibleCount === 0) {
+          noResults?.classList.remove('hidden');
+          postsContainer?.classList.add('hidden');
+          document.getElementById('pagination')?.classList.add('hidden');
+          if (noResultsMessage) {
+            let msg = '';
+            if (query && cat && tag) msg = `没有找到含 "${query}"、分类 "${cat}"、标签 "${tag}" 的文章`;
+            else if (query && cat) msg = `没有找到含 "${query}"、分类 "${cat}" 的文章`;
+            else if (query && tag) msg = `没有找到含 "${query}"、标签 "${tag}" 的文章`;
+            else if (cat && tag) msg = `没有找到分类 "${cat}"、标签 "${tag}" 的文章`;
+            else if (query) msg = `没有找到含 "${query}" 的文章`;
+            else if (cat) msg = `没有找到分类 "${cat}" 的文章`;
+            else if (tag) msg = `没有找到标签 "${tag}" 的文章`;
+            noResultsMessage.textContent = msg;
+          }
+          return;
+        }
+
+        noResults?.classList.add('hidden');
+        postsContainer?.classList.remove('hidden');
+
+        if (postsPerPage > 0) {
+          const totalPages = Math.ceil(visibleCount / postsPerPage);
+          const start = (currentPage - 1) * postsPerPage;
+          const end = start + postsPerPage;
+          const show = visiblePosts.slice(start, end);
+
+          show.forEach((p, i) => {
+            p.element.style.display = '';
+            p.element.style.animationDelay = `${i * 100}ms`;
+            p.element.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-2');
+          });
+
+          updatePagination(totalPages);
+        } else {
+          visiblePosts.forEach(p => p.element.style.display = '');
+          document.getElementById('pagination')?.classList.add('hidden');
+        }
+      }
+
+      function updatePagination(totalPages) {
+        const pagination = document.getElementById('pagination');
+        if (!pagination) return;
+
+        if (totalPages <= 1) {
+          pagination.classList.add('hidden');
+          return;
+        }
+        pagination.classList.remove('hidden');
+        pagination.innerHTML = '';
+
+        const createPageButton = (pageNum, isActive = false, isEllipsis = false) => {
+          const button = document.createElement('button');
+          
+          if (isEllipsis) {
+            button.textContent = '…';
+            button.disabled = true;
+            button.className = 'w-9 h-9 flex items-center justify-center text-sm font-medium text-slate-400 dark:text-slate-500 cursor-default';
+          } else {
+            button.textContent = pageNum.toString();
+            button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 relative overflow-hidden group ${
+              isActive
+                ? 'bg-docs-accent text-white dark:bg-dark-accent shadow-md shadow-docs-accent/20 scale-100 font-bold'
+                : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-white/5 border border-transparent hover:border-docs-accent hover:text-docs-accent hover:bg-docs-accent/5 dark:hover:border-dark-accent dark:hover:text-dark-accent dark:hover:bg-dark-accent/10'
+            }`;
+            
+            if (!isActive) {
+              button.addEventListener('click', () => {
+                goToPage(pageNum);
+              });
+            }
+          }
+          
+          return button;
+        };
+        
+        const createArrowButton = (direction, disabled) => {
+          const button = document.createElement('button');
+          button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 ${
+            disabled
+              ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed bg-transparent'
+              : 'text-slate-600 dark:text-slate-400 bg-white dark:bg-white/5 border border-transparent hover:border-docs-accent hover:text-docs-accent hover:bg-docs-accent/5 dark:hover:border-dark-accent dark:hover:text-dark-accent dark:hover:bg-dark-accent/10'
+          }`;
+          button.disabled = disabled;
+          
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('width', '16');
+          svg.setAttribute('height', '16');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('fill', 'none');
+          svg.setAttribute('stroke', 'currentColor');
+          svg.setAttribute('stroke-width', '2');
+          svg.setAttribute('stroke-linecap', 'round');
+          svg.setAttribute('stroke-linejoin', 'round');
+          
+          const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+          polyline.setAttribute('points', direction === 'prev' ? '15 18 9 12 15 6' : '9 18 15 12 9 6');
+          
+          svg.appendChild(polyline);
+          button.appendChild(svg);
+          
+          if (!disabled) {
+            button.addEventListener('click', () => {
+              goToPage(direction === 'prev' ? currentPage - 1 : currentPage + 1);
+            });
+          }
+          
+          return button;
+        };
+
+        const pageNumbers = [];
+        
+        if (totalPages <= 7) {
+          for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(i);
+          }
+        } else {
+          pageNumbers.push(1);
+          
+          if (currentPage <= 3) {
+            pageNumbers.push(2, 3, 4, 'ellipsis', totalPages);
+          } else if (currentPage >= totalPages - 2) {
+            pageNumbers.push('ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+          } else {
+            pageNumbers.push('ellipsis', currentPage - 1, currentPage, currentPage + 1, 'ellipsis', totalPages);
+          }
+        }
+        
+        pagination.appendChild(createArrowButton('prev', currentPage === 1));
+        
+        pageNumbers.forEach((pageNum) => {
+          if (pageNum === 'ellipsis') {
+            pagination.appendChild(createPageButton(0, false, true));
+          } else {
+            pagination.appendChild(createPageButton(pageNum, pageNum === currentPage));
+          }
+        });
+        
+        pagination.appendChild(createArrowButton('next', currentPage === totalPages));
+      }
+
+      function goToPage(page) {
+        const query = searchQuery.toLowerCase().trim();
+        const cat = selectedCategory;
+        const tag = selectedTag;
+        const postsData = getPostsData();
+        const visiblePosts = postsData.filter(p => {
+          const ms = !query || p.title.toLowerCase().includes(query) || p.tags.some(t => t.toLowerCase().includes(query)) || p.content.toLowerCase().includes(query);
+          const mc = !cat || p.category === cat;
+          const mt = !tag || p.tags.includes(tag);
+          return ms && mc && mt;
+        });
+
+        const totalPages = Math.ceil(visiblePosts.length / postsPerPage);
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+
+        postsData.forEach(p => p.element.style.display = 'none');
+
+        const start = (currentPage - 1) * postsPerPage;
+        const end = start + postsPerPage;
+        const show = visiblePosts.slice(start, end);
+        show.forEach((p, i) => {
+          p.element.style.display = '';
+          p.element.style.animationDelay = `${i * 80}ms`;
+          p.element.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-2');
+        });
+
+        updatePagination(totalPages);
+        postsContainer?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      window.addEventListener('tag-filter-changed', e => {
+        selectedTag = e.detail.tag === '' ? null : e.detail.tag;
+        updateFilters();
+      });
+
+      window.addEventListener('search-updated', e => {
+        searchQuery = e.detail.query;
+        updateFilters();
+      });
+
+      document.getElementById('clear-filters')?.addEventListener('click', () => {
+        searchQuery = '';
+        selectedCategory = null;
+        selectedTag = null;
+        const inp = document.querySelector('input[type="text"]');
+        if (inp) inp.value = '';
+        updateCategoryActive();
+        updateFilters();
+      });
+
+      updateCategoryActive();
+      updateFilters();
+      window.dispatchEvent(new CustomEvent('tag-filter-changed', { detail: { tag: '' } }));
     });
-  }
-
-  function updatePagination(totalPages) {
-    const pagination = document.getElementById('pagination');
-    if (!pagination) return;
-    if (totalPages <= 1) { pagination.classList.add('hidden'); return; }
-    pagination.classList.remove('hidden');
-    pagination.innerHTML = '';
-
-    const createBtn = (text, isActive = false, onClick = null) => {
-      const b = document.createElement('button');
-      b.className = `w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium transition-all ${
-        isActive
-          ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md'
-          : 'bg-white/80 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60'
-      }`;
-      b.textContent = text;
-      if (onClick) b.addEventListener('click', onClick);
-      return b;
-    };
-
-    const prev = createBtn('←', currentPage === 1, () => goToPage(currentPage - 1));
-    prev.disabled = currentPage === 1;
-    pagination.appendChild(prev);
-
-    for (let i = 1; i <= totalPages; i++) {
-      if (totalPages > 7 && i > 1 && i < totalPages && Math.abs(i - currentPage) > 1) continue;
-      pagination.appendChild(createBtn(i.toString(), i === currentPage, () => goToPage(i)));
-    }
-
-    const next = createBtn('→', currentPage === totalPages, () => goToPage(currentPage + 1));
-    next.disabled = currentPage === totalPages;
-    pagination.appendChild(next);
-  }
-
-  function goToPage(page) {
-    const postsData = getPostsData();
-    const q = searchQuery.toLowerCase();
-    const tag = selectedTag;
-    const visible = postsData.filter(p => {
-      const ms = !q || p.title.toLowerCase().includes(q) || p.tags.some(t => t.toLowerCase().includes(q)) || p.content.toLowerCase().includes(q);
-      const mt = !tag || p.tags.includes(tag);
-      return ms && mt;
-    });
-
-    const totalPages = Math.ceil(visible.length / postsPerPage);
-    if (page < 1 || page > totalPages) return;
-    currentPage = page;
-
-    postsData.forEach(p => p.element.style.display = 'none');
-    const show = visible.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
-    show.forEach(p => p.element.style.display = '');
-
-    updatePagination(totalPages);
-    postsContainer?.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  window.addEventListener('tag-filter-changed', e => {
-    selectedTag = e.detail.tag || null;
-    updateFilters();
-  });
-
-  window.addEventListener('search-updated', e => {
-    searchQuery = e.detail.query;
-    updateFilters();
-  });
-
-  document.getElementById('clear-filters')?.addEventListener('click', () => {
-    searchQuery = '';
-    selectedTag = null;
-    const inp = document.querySelector('input[type="text"]');
-    if (inp) inp.value = '';
-    updateFilters();
-  });
-
-  updateFilters();
-  window.dispatchEvent(new CustomEvent('tag-filter-changed', { detail: { tag: '' } }));
-});
-</script>
+  </script>
 </BaseLayout>
