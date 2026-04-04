@@ -30,9 +30,12 @@ export default function Footer() {
     <footer className="mt-auto pb-10 text-center text-xs text-slate-400 dark:text-slate-500">
       <div className="w-24 h-1 mx-auto bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent mb-8"></div>
       <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] sm:text-xs text-slate-400/80 dark:text-slate-500">
-        <span>
+        <a
+          href="/"
+          className="hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+        >
           © {new Date().getFullYear()} 王苏洋Blog 主题 · 基于 Astro & Tailwind 构建
-        </span>
+        </a>
         <span className="text-slate-300 dark:text-slate-600">·</span>
         <a
           href="https://beian.miit.gov.cn/"
