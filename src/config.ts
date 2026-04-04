@@ -26,11 +26,11 @@ export const HOME_PAGE = {
 export const NAVBAR = {
   // 导航链接
   links: [
-    { label: '首页', href: '/' },
-    { label: '归档', href: '/archive' },
-    { label: '友链', href: '/link' },
-    { label: '开往', href: 'https://www.travellings.cn/go.html', target: '_blank' },
-    { label: '关于', href: '/about' },
+    { label: '首页', href: '/', icon: 'mdi:home' },
+    { label: '归档', href: '/archive', icon: 'mdi:archive' },
+    { label: '友链', href: '/link', icon: 'mdi:link' },
+    { label: '开往', href: 'https://www.travellings.cn/go.html', target: '_blank', icon: 'mdi:train' },
+    { label: '关于', href: '/about', icon: 'mdi:account' },
   ],
   // Logo 文字（如果为空则只显示图标）
   logoText: "王苏洋Blog",
