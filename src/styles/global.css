@@ -421,3 +421,21 @@ code:not(pre code):not([class*="language-"]) {
     padding-right: 10px !important;
   }
 }
+/* 仅手机端压缩标签上方空白 */
+@media (max-width: 640px) {
+  header.relative {
+    padding-top: 0.5rem !important; /* 把顶部内边距从10改成0.5rem */
+  }
+  /* 标签容器进一步压缩 */
+  .flex.flex-wrap.justify-start.gap-2 {
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+/* 全端压缩（如果要电脑手机都改） */
+/* header.relative {
+  padding-top: 0.5rem !important;
+}
+.flex.flex-wrap.justify-start.gap-2 {
+  margin-bottom: 0.75rem !important;
+} */
