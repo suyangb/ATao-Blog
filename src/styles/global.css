@@ -421,7 +421,25 @@ code:not(pre code):not([class*="language-"]) {
     padding-right: 10px !important;
   }
 }
-/* 只缩小标签上方的空白 */
-header .relative.z-10 {
-  margin-top: -65px !important;
+/* 文章头部整体缩小间距 */
+article header.relative {
+  padding-top: 4px !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 16px !important;
+}
+
+/* 标签下方间距缩小 */
+.tags,
+.flex.flex-wrap.gap-2 {
+  margin-bottom: 4px !important;
+}
+
+/* 标题下方间距缩小 */
+h1.text-3xl {
+  margin-bottom: 8px !important;
+}
+
+/* 摘要下方间距缩小 */
+article header p {
+  margin-bottom: 8px !important;
 }
