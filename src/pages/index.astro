@@ -11,17 +11,25 @@ import { Search } from 'lucide-react';
 import { calculateReadingTime } from '../utils/readingTime';
 import { generateShortId } from '../utils/slug';
 
-// 字数统计
-function countWords(text: string): number {
-  const pure = text
+// Function to convert markdown to plain text for search
+function markdownToPlainText(markdown: string): string {
+  return markdown
     .replace(/```[\s\S]*?```/g, '')
     .replace(/`[^`]+`/g, '')
-    .replace(/!\[.*?\]\(.*?\)/g, '')
-    .replace(/\[.*?\]\(.*?\)/g, '$1')
+    .replace(/!\[([^\]]*)\]\([^\)]+\)/g, '')
+    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+    .replace(/^#{1,6}\s+(.+)$/gm, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    .replace(/_([^_]+)_/g, '$1')
+    .replace(/^---$/gm, '')
+    .replace(/^[\s]*[-*+]\s+/gm, '')
+    .replace(/^[\s]*\d+\.\s+/gm, '')
+    .replace(/^>\s+/gm, '')
     .replace(/<[^>]+>/g, '')
     .replace(/\s+/g, ' ')
     .trim();
-  return pure.length;
 }
 
 const allPosts = await getCollection('blog');
@@ -114,9 +122,9 @@ const postsPerPage = HOME_PAGE.postsPerPage;
               <circle cx="5" cy="19" r="1"></circle>
             </svg>
           </a>
-          <a href="mailto:14933730@qq.com" target="_blank" rel="noopener noreferrer" 
+          <a href="mailto:1493367306@qq.com" target="_blank" rel="noopener noreferrer" 
              class="transition-all duration-300 hover:text-red-400 hover:scale-110">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9-2-2-2H4c-1.1 0-2-.9-2-2V6c0 1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9-2-2-2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
           </a>
         </div>
 
@@ -128,14 +136,14 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           
           <div class="grid grid-cols-1 gap-8 min-h-[200px]" id="posts-container" data-posts-per-page={postsPerPage}>
           {posts.map((post) => {
-            const wordCount = countWords(post.body);
+            const plainTextContent = markdownToPlainText(post.body);
             return (
             <div
               data-post-card
               data-title={post.data.title}
               data-tags={post.data.tags.join(' ')}
               data-description={post.data.summary || ''}
-              data-content={post.body}
+              data-content={plainTextContent}
               data-post-id={post.id}
               class="transition-all duration-500"
             >
@@ -147,8 +155,7 @@ const postsPerPage = HOME_PAGE.postsPerPage;
                   summary: post.data.summary,
                   date: post.data.date,
                   tags: post.data.tags,
-                  readingTime: calculateReadingTime(post.body),
-                  wordCount: wordCount,
+                  readingTime: post.data.readingTime || calculateReadingTime(post.body),
                   slug: generateShortId(post.id),
                 }}
               />
@@ -364,6 +371,7 @@ const postsPerPage = HOME_PAGE.postsPerPage;
           return button;
         };
         
+        // 原始箭头样式（完全恢复你原来的）
         const createArrowButton = (direction, disabled) => {
           const button = document.createElement('button');
           button.className = `w-9 h-9 flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-300 ${
