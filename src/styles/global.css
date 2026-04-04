@@ -436,10 +436,10 @@ article header.relative {
 
 /* 标题下方间距缩小 */
 h1.text-3xl {
-  margin-bottom: 16px !important;
+  margin-bottom: 18px !important;
 }
 
 /* 摘要下方间距缩小 */
 article header p {
-  margin-bottom: 8px !important;
+  margin-bottom: 13px !important;
 }
