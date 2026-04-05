@@ -86,7 +86,7 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 
             <div class="relative z-10 flex flex-col items-start">
               {/* Tags */}
-              <div class="flex flex-wrap justify-start gap-2 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div class="flex flex-wrap justify-start gap-2 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {post.data.tags.map(tag => (
                   <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
                     #{tag}
