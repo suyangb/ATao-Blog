@@ -71,10 +71,10 @@ const charCount = post.body.length;
           <span class="text-sm font-medium">返回列表</span>
         </a>
 
-        <article class="bg-white/90 dark:bg-dark-paper/90 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-8 sm:p-12 md:p-16 transition-colors duration-300" style="will-change: scroll-position; contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
-          <header class="relative mb-12 py-0 sm:py-0 border-b border-slate-100 dark:border-white/10 text-left overflow-hidden">
+        <article class="bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-8 sm:p-12 md:p-16" style="will-change: scroll-position; contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
+          <header class="relative mb-12 py-0 sm:py-0 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-docs-accent/5 to-transparent opacity-0 dark:opacity-20 pointer-events-none rounded-full blur-3xl"></div>
-            <div class="absolute top-0 right-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none rotate-12 scale-150 text-slate-900 dark:text-white">
+            <div class="absolute top-0 right-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none rotate-12 scale-150">
               <svg width="200" height="200" viewBox="0 0 100 100" fill="currentColor">
                 <path d="M50 0L61 39L100 50L61 61L50 100L39 61L0 50L39 39L50 0Z" />
               </svg>
@@ -83,7 +83,7 @@ const charCount = post.body.length;
             <div class="relative z-10 flex flex-col items-start">
               <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-6 max-w-4xl animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
                 {post.data.title}
-                <div class="absolute -bottom-4 left-0 w-24 h-1 bg-docs-accent/30 dark:bg-dark-accent/30 rounded-full"></div>
+                <div class="absolute -bottom-4 left-0 w-24 h-1 bg-docs-accent/30 rounded-full"></div>
               </h1>
 
               {post.data.summary && (
@@ -92,42 +92,35 @@ const charCount = post.body.length;
                 </p>
               )}
 
-              <div class="flex items-center gap-3 flex-nowrap text-nowrap text-slate-500 dark:text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+              <div class="flex items-center gap-3 flex-nowrap text-nowrap text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
                 <div class="flex items-center gap-1">
-                  <Calendar size={14} class="text-docs-accent dark:text-dark-accent" />
+                  <Calendar size={14} class="text-docs-accent" />
                   <span>{post.data.date}</span>
                 </div>
                 <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
                 <div class="flex items-center gap-1">
-                  <Clock size={14} class="text-docs-accent dark:text-dark-accent" />
+                  <Clock size={14} class="text-docs-accent" />
                   <span>{readingTime}</span>
                 </div>
                 <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
                 <div class="flex items-center gap-1">
-                  <FileText size={14} class="text-docs-accent dark:text-dark-accent" />
+                  <FileText size={14} class="text-docs-accent" />
                   <span>{charCount.toLocaleString()} 字</span>
                 </div>
               </div>
             </div>
           </header>
 
-          <!-- 核心修复：给 Markdown 渲染区域加全局样式覆盖，强制暗色生效 -->
-          <div class="prose prose-slate dark:prose-invert max-w-none prose-lg 
-            [&_p]:text-slate-700 [&_p]:dark:text-slate-200
-            [&_h1]:text-slate-900 [&_h1]:dark:text-white
-            [&_h2]:text-slate-900 [&_h2]:dark:text-white
-            [&_h3]:text-slate-900 [&_h3]:dark:text-white
-            [&_strong]:text-slate-900 [&_strong]:dark:text-white
-            [&_a]:text-docs-accent [&_a]:dark:text-dark-accent
-          ">
+          <!-- 正文：和摘要同色 -->
+          <div class="text-slate-600 dark:text-slate-300">
             <MarkdownRenderer client:load content={post.body} />
           </div>
 
-          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700/80">
+          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
             <div class="mb-8 flex items-center flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <Tag size={16} class="text-docs-accent dark:text-dark-accent" />
+              <Tag size={16} class="text-docs-accent" />
               {post.data.tags.map(tag => (
-                <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 dark:hover:border-dark-accent/30 hover:text-docs-accent dark:hover:text-dark-accent transition-colors cursor-default">
+                <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
                   #{tag}
                 </span>
               ))}
@@ -135,7 +128,7 @@ const charCount = post.body.length;
             <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
           </div>
           
-          <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/10">
+          <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
               <div class="flex justify-start">
                 {prevPost && prevPostId ? (
@@ -143,10 +136,10 @@ const charCount = post.body.length;
                     href={`/posts/${prevPostId}`}
                     class="group w-full text-left p-4 -ml-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
                   >
-                    <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                    <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent">
                       <ArrowLeft size={14} /> 上一篇
                     </div>
-                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent">
                       {prevPost.data.title}
                     </div>
                   </a>
@@ -159,10 +152,10 @@ const charCount = post.body.length;
                     href={`/posts/${nextPostId}`}
                     class="group w-full text-right p-4 -mr-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200"
                   >
-                    <div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                    <div class="flex items-center gap-2 justify-end text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent">
                       下一篇 <ArrowRight size={14} />
                     </div>
-                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent">
                       {nextPost.data.title}
                     </div>
                   </a>
