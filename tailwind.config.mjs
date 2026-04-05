@@ -20,16 +20,16 @@ export default {
           bg: '#fdfbf6',
           paper: '#ffffff',
           text: '#333333',
-          accent: '#F5F5F5',
+          accent: '#D3D3D3',
           muted: '#888888',
         },
         // MangoCat 暗色主题
         dark: {
-          bg: '#111827',
-          paper: '#1f2937',
-          text: '#f3f4f6',
-          accent: '#fb923c',
-          muted: '#9ca3af',
+          bg: '#0A0B0E',
+          paper: '#131418',
+          text: '#E5E7EB',
+          accent: '#60A5FA',
+          muted: '#9CA3AF',
         }
       },
       keyframes: {
