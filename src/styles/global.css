@@ -421,25 +421,3 @@ code:not(pre code):not([class*="language-"]) {
     padding-right: 10px !important;
   }
 }
-/* 文章头部整体缩小间距 */
-article header.relative {
-  padding-top: 4px !important;
-  padding-bottom: 40px !important;
-  margin-bottom: 40px !important;
-}
-
-/* 标签下方间距缩小 */
-.tags,
-.flex.flex-wrap.gap-2 {
-  margin-bottom: 16px !important;
-}
-
-/* 标题下方间距缩小 */
-h1.text-3xl {
-  margin-bottom: 18px !important;
-}
-
-/* 摘要下方间距缩小 */
-article header p {
-  margin-bottom: 13px !important;
-}
