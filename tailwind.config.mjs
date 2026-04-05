@@ -20,7 +20,7 @@ export default {
           bg: '#FFFFFF',
           paper: '#ffffff',
           text: '#333333',
-          accent: '#DCDCDC',
+          accent: '#D3D3D3',
           muted: '#888888',
         },
         // MangoCat 暗色主题
