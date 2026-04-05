@@ -424,8 +424,8 @@ code:not(pre code):not([class*="language-"]) {
 /* 文章头部整体缩小间距 */
 article header.relative {
   padding-top: 4px !important;
-  padding-bottom: 30px !important;
-  margin-bottom: 30px !important;
+  padding-bottom: 40px !important;
+  margin-bottom: 40px !important;
 }
 
 /* 标签下方间距缩小 */
