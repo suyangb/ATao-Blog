@@ -17,10 +17,10 @@ export default {
       colors: {
         // MangoCat 浅色主题
         docs: {
-          bg: '#ffffff',
-          paper: '#DCDCDC',
+          bg: '#fdfbf6',
+          paper: '#ffffff',
           text: '#333333',
-          accent: '#D3D3D3',
+          accent: '#f97316',
           muted: '#888888',
         },
         // MangoCat 暗色主题
