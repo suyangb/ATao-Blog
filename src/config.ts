@@ -13,7 +13,7 @@ export const HOME_PAGE = {
   // 出处
   source: "屈原《离骚》",
   // 是否显示粒子背景
-  showParticles: true,
+  showParticles: false,
   // 是否显示标签筛选
   showTagFilters: true,
   // 每页显示的文章数量（0 表示显示全部）
@@ -43,7 +43,7 @@ export const NAVBAR = {
   // 导航栏背景透明度（0-1）
   backgroundOpacity: 0.8,
   // 是否启用毛玻璃效果
-  enableBackdropBlur: true,
+  enableBackdropBlur: false,
 };
 
 // ============================================
