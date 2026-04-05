@@ -116,16 +116,15 @@ const readingTime = post.data.readingTime || calculateReadingTime(post.body);
 
           <MarkdownRenderer client:load content={post.body} />
 
-          <!-- 标签放在这里：作者卡片上方 -->
-          <div class="mt-10 flex flex-wrap justify-start gap-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            {post.data.tags.map(tag => (
-              <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
-                #{tag}
-              </span>
-            ))}
-          </div>
-
           <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
+            <!-- 标签放在分割线下面、作者卡片上方 -->
+            <div class="mb-8 flex flex-wrap justify-start gap-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {post.data.tags.map(tag => (
+                <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
+                  #{tag}
+                </span>
+              ))}
+            </div>
             <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
           </div>
           
