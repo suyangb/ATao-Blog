@@ -10,7 +10,7 @@ import ProgressBar from '../../components/ProgressBar';
 import TableOfContents from '../../components/TableOfContents';
 import ScrollToTop from '../../components/ScrollToTop';
 import Comment from '../../components/Comment';
-import { ArrowLeft, ArrowRight, Calendar, Clock, FileText } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, Clock, FileText, Tag } from 'lucide-react';
 import { calculateReadingTime } from '../../utils/readingTime';
 import { generateShortId } from '../../utils/slug';
 import { FEATURES } from '../../config';
@@ -50,7 +50,7 @@ const charCount = post.body.length;
     {FEATURES.readingProgress && <ProgressBar client:load />}
     {FEATURES.tableOfContents && <TableOfContents client:load />}
     {FEATURES.scrollToTop && <ScrollToTop client:load />}
-    {FEATURES.particles && <ParticlesBackground client:load />}
+    {FEATURES.particles && <ParticlesBackground />}
     
     <Navbar 
       client:load
@@ -105,7 +105,7 @@ const charCount = post.body.length;
                 <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
                 <div class="flex items-center gap-1">
                   <FileText size={14} class="text-docs-accent" />
-                  <span>{charCount.toLocaleString()} 字数</span>
+                  <span>{charCount.toLocaleString()} 字</span>
                 </div>
               </div>
             </div>
@@ -114,7 +114,8 @@ const charCount = post.body.length;
           <MarkdownRenderer client:load content={post.body} />
 
           <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
-            <div class="mb-8 flex flex-wrap justify-start gap-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div class="mb-8 flex items-center flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <Tag size={16} class="text-docs-accent" />
               {post.data.tags.map(tag => (
                 <span class="px-3 py-1 rounded-[4px] text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 border border-transparent hover:border-docs-accent/30 hover:text-docs-accent transition-colors cursor-default">
                   #{tag}
@@ -135,7 +136,7 @@ const charCount = post.body.length;
                     <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
                       <ArrowLeft size={14} /> 上一篇
                     </div>
-                    <div class="text-slate-70 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
                       {prevPost.data.title}
                     </div>
                   </a>
