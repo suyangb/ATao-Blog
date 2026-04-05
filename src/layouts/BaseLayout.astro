@@ -11,6 +11,23 @@ interface Props {
 const { title = BLOG_NAME, description = SITE_DESCRIPTION } = Astro.props;
 ---
 
+<script is:inline>
+// 暗色模式防闪白：优先 localStorage，否则默认浅色
+const theme = (() => {
+  if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+    return localStorage.getItem('theme');
+  }
+  // 默认浅色模式
+  return 'light';
+})();
+if (theme === 'dark') {
+  document.documentElement.classList.add('dark');
+} else {
+  document.documentElement.classList.remove('dark');
+}
+window.localStorage.setItem('theme', theme);
+</script>
+
 <!doctype html>
 <html lang="zh-CN" class="antialiased">
   <head>
@@ -121,4 +138,3 @@ const { title = BLOG_NAME, description = SITE_DESCRIPTION } = Astro.props;
     </script>
   </body>
 </html>
-
