@@ -46,7 +46,7 @@ const charCount = post.body.length;
 ---
 
 <BaseLayout title={`${post.data.title} | ${post.data.title}`}>
-  <div class="min-h-screen relative flex flex-col bg-docs-bg dark:bg-dark-bg">
+  <div class="min-h-screen relative flex flex-col bg-docs-bg dark:bg-dark-bg transition-colors duration-300">
     {FEATURES.readingProgress && <ProgressBar client:load />}
     {FEATURES.tableOfContents && <TableOfContents client:load />}
     {FEATURES.scrollToTop && <ScrollToTop client:load />}
@@ -71,8 +71,8 @@ const charCount = post.body.length;
           <span class="text-sm font-medium">返回列表</span>
         </a>
 
-        <article class="bg-white/80 dark:bg-dark-paper/80 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-8 sm:p-12 md:p-16" style="will-change: scroll-position; contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
-          <header class="relative mb-12 py-0 sm:py-0 border-b border-slate-100 dark:border-white/5 text-left overflow-hidden">
+        <article class="bg-white/90 dark:bg-dark-paper/90 backdrop-blur-sm rounded-3xl shadow-sm dark:shadow-none border border-slate-100/50 dark:border-white/5 p-8 sm:p-12 md:p-16 transition-colors duration-300" style="will-change: scroll-position; contain: layout style paint; content-visibility: auto; contain-intrinsic-size: auto 500px;">
+          <header class="relative mb-12 py-0 sm:py-0 border-b border-slate-100 dark:border-white/10 text-left overflow-hidden">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-docs-accent/5 to-transparent opacity-0 dark:opacity-20 pointer-events-none rounded-full blur-3xl"></div>
             <div class="absolute top-0 right-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none rotate-12 scale-150 text-slate-900 dark:text-white">
               <svg width="200" height="200" viewBox="0 0 100 100" fill="currentColor">
@@ -83,7 +83,7 @@ const charCount = post.body.length;
             <div class="relative z-10 flex flex-col items-start">
               <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white font-serif leading-tight mb-6 max-w-4xl animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 relative">
                 {post.data.title}
-                <div class="absolute -bottom-4 left-0 w-24 h-1 bg-docs-accent/30 dark:bg-dark-accent/30 rounded-full"></div>
+                <div class="absolute -bottom-4 left-0 w-24 h-1 bg-docs-accent/40 dark:bg-dark-accent/40 rounded-full"></div>
               </h1>
 
               {post.data.summary && (
@@ -92,7 +92,7 @@ const charCount = post.body.length;
                 </p>
               )}
 
-              <div class="flex items-center gap-3 flex-nowrap text-nowrap text-slate-400 dark:text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+              <div class="flex items-center gap-3 flex-nowrap text-nowrap text-slate-500 dark:text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
                 <div class="flex items-center gap-1">
                   <Calendar size={14} class="text-docs-accent dark:text-dark-accent" />
                   <span>{post.data.date}</span>
@@ -111,9 +111,11 @@ const charCount = post.body.length;
             </div>
           </header>
 
-          <MarkdownRenderer client:load content={post.body} />
+          <div class="prose prose-slate dark:prose-invert max-w-none prose-lg prose-headings:font-serif prose-headings:text-slate-900 dark:prose-headings:text-white prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-a:text-docs-accent dark:prose-a:text-dark-accent">
+            <MarkdownRenderer client:load content={post.body} />
+          </div>
 
-          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700">
+          <div class="mt-12 pt-12 border-t-2 border-slate-200 dark:border-slate-700/80">
             <div class="mb-8 flex items-center flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <Tag size={16} class="text-docs-accent dark:text-dark-accent" />
               {post.data.tags.map(tag => (
@@ -125,7 +127,7 @@ const charCount = post.body.length;
             <AuthorCard client:load title={post.data.title} summary={post.data.summary} />
           </div>
           
-          <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
+          <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/10">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
               <div class="flex justify-start">
                 {prevPost && prevPostId ? (
