@@ -92,18 +92,18 @@ const charCount = post.body.length;
                 </p>
               )}
 
-              <div class="flex items-center gap-2 flex-nowrap text-nowrap text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-                <div class="flex items-center gap-0.5">
+              <div class="flex items-center gap-3 flex-nowrap text-nowrap text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+                <div class="flex items-center gap-1">
                   <Calendar size={14} class="text-docs-accent" />
                   <span>{post.data.date}</span>
                 </div>
                 <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
-                <div class="flex items-center gap-0.5">
+                <div class="flex items-center gap-1">
                   <Clock size={14} class="text-docs-accent" />
                   <span>{readingTime}</span>
                 </div>
                 <div class="w-px h-4 bg-slate-200 dark:bg-white/10"></div>
-                <div class="flex items-center gap-0.5">
+                <div class="flex items-center gap-1">
                   <FileText size={14} class="text-docs-accent" />
                   <span>{charCount.toLocaleString()} 字</span>
                 </div>
@@ -135,7 +135,7 @@ const charCount = post.body.length;
                     <div class="flex items-center gap-2 text-slate-400 mb-2 text-xs font-bold uppercase tracking-wider group-hover:text-docs-accent dark:group-hover:text-dark-accent">
                       <ArrowLeft size={14} /> 上一篇
                     </div>
-                    <div class="text-slate-700 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
+                    <div class="text-slate-70 dark:text-slate-200 font-serif font-bold line-clamp-2 group-hover:text-docs-accent dark:group-hover:text-dark-accent">
                       {prevPost.data.title}
                     </div>
                   </a>
