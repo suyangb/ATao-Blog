@@ -17,7 +17,7 @@ export default {
       colors: {
         // MangoCat 浅色主题
         docs: {
-          bg: '#F8F8FF',
+          bg: '#DCDCDC',
           paper: '#ffffff',
           text: '#333333',
           accent: '#D3D3D3',
